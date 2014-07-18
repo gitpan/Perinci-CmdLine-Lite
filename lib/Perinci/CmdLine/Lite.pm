@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-07-16'; # DATE
-our $VERSION = '0.01'; # VERSION
+our $DATE = '2014-07-18'; # DATE
+our $VERSION = '0.02'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -12,9 +12,6 @@ use Mo; extends 'Perinci::CmdLine::Base';
 # when debugging, use this instead of the above because Mo doesn't give clear
 # error message if base class has errors.
 #use parent 'Perinci::CmdLine::Base';
-
-# compared to pericmd, i want to avoid using internal attributes like
-# $self->{_format}, $self->{_res}, etc.
 
 sub BUILD {
     my ($self, $args) = @_;
@@ -90,13 +87,13 @@ sub BUILD {
     }
 
     $self->{formats} //= [qw/text text-simple text-pretty json/];
+
+    $self->{per_arg_json} //= 1;
 }
 
 sub hook_before_run {}
 
 sub hook_after_parse_argv {}
-
-sub hook_after_select_subcommand {}
 
 sub hook_format_result {
     my ($self, $r) = @_;
@@ -192,13 +189,28 @@ sub hook_display_result {
 
 sub hook_after_run {}
 
+# copy-pasted from SHARYANTO::Package::Util
+sub __package_exists {
+    no strict 'refs';
+
+    my $pkg = shift;
+
+    return unless $pkg =~ /\A\w+(::\w+)*\z/;
+    if ($pkg =~ s/::(\w+)\z//) {
+        return !!${$pkg . "::"}{$1 . "::"};
+    } else {
+        return !!$::{$pkg . "::"};
+    }
+}
+
 sub __require_url {
     my ($url) = @_;
 
     $url =~ m!\A(?:pl:)?/(\w+(?:/\w+)*)/(\w*)\z!
         or die [500, "Unsupported/bad URL '$url'"];
     my ($mod, $func) = ($1, $2);
-    require "$mod.pm";
+    # skip if package already exists, e.g. 'main'
+    require "$mod.pm" unless __package_exists($mod);
     $mod =~ s!/!::!g;
     ($mod, $func);
 }
@@ -249,10 +261,13 @@ sub run_subcommands {
     }
 
     say "Available subcommands:";
-    my $subcommands = $self->list_subcommands;
+    my $scs = $self->list_subcommands;
+    my $longest = 6;
+    for (keys %$scs) { my $l = length; $longest = $l if $l > $longest }
     [200, "OK",
      join("",
-          (map { "  $_->{name} $_->{url}" } @$subcommands),
+          (map { sprintf("  %-${longest}s  %s\n",$_,$scs->{$_}{summary}//"") }
+               sort keys %$scs),
       )];
 }
 
@@ -274,9 +289,122 @@ sub run_version {
 }
 
 sub run_help {
-    my ($self) = @_;
+    my ($self, $r) = @_;
 
-    [200, "OK", "Help message"];
+    my @help;
+    my $scn  = $r->{subcommand_name};
+    my $scd  = $r->{subcommand_data};
+    my $meta = $self->get_meta($scd->{url} // $self->{url});
+
+    # summary
+    push @help, $self->get_program_and_subcommand_name($r);
+    {
+        my $sum = ($scd ? $scd->{summary} : undef) //
+            $meta->{summary};
+        last unless $sum;
+        push @help, " - ", $sum;
+    }
+
+    # description
+    push @help, "\n\n";
+    {
+        my $desc = ($scd ? $scd->{description} : undef) //
+            $meta->{description};
+        last unless $desc;
+        $desc =~ s/\A\n+//;
+        $desc =~ s/\n+\z//;
+        push @help, $desc, "\n\n";
+    }
+
+    # options
+    {
+        require Perinci::Sub::GetArgs::Argv;
+        my $co = $self->common_opts;
+        my $co_by_ospec = { map {$co->{$_}{getopt} => $_} keys %$co };
+        my $res = Perinci::Sub::GetArgs::Argv::gen_getopt_long_spec_from_meta(
+            meta         => $meta,
+            common_opts  => { map {$_ => sub{}} keys %$co_by_ospec },
+            per_arg_json => $self->{per_arg_json},
+            per_arg_yaml => $self->{per_arg_yaml},
+        );
+        my $sms = $res->[3]{'func.specmeta'};
+
+        # first, all common options first
+        my @opts;
+        for my $k (sort(grep {!defined($sms->{$_}{arg})} keys %$sms)) {
+            my $p = $sms->{$k}{parsed};
+            # XXX currently ad-hoc, skip irrelevant common opt
+            next if $scn && $k eq 'subcommands';
+            my $i = 0;
+            my $opt = '';
+            # put short aliases back to the back
+            for (sort {
+                (length($a) > 1 ? 0:1) <=> (length($b) > 1 ? 0:1) ||
+                    $a cmp $b } @{ $p->{opts} }) {
+                $i++;
+                $opt .= ", " if $i > 1;
+                $opt .= (length($_) > 1 ? '--':'-').$_;
+                $opt .= "=$p->{type}" if $p->{type} && $i==1;
+            }
+            push @opts, [$opt, $co->{$co_by_ospec->{ $sms->{$k}{orig_spec} }}{summary}];
+        }
+        my $longest = 6;
+        for (@opts) { my $l = length($_->[0]); $longest = $l if $l > $longest }
+        push @help, "Common options:\n" if @opts;
+        for (@opts) {
+            push @help, sprintf("  %-${longest}s  %s\n",
+                                $_->[0], $_->[1] // "");
+        }
+        push @help, "\n" if @opts;
+
+        # now the rest
+        @opts = ();
+        for my $k (sort(grep {defined($sms->{$_}{arg})} keys %$sms)) {
+            my $sm = $sms->{$k};
+            # skip non-code aliases
+            next if $sm->{is_alias} && !$sm->{is_code};
+            my $p = $sm->{parsed};
+            my $i = 0;
+            my $opt = '';
+            # put short aliases back to the back
+            for (sort {
+                (length($a) > 1 ? 0:1) <=> (length($b) > 1 ? 0:1) ||
+                    $a cmp $b } @{ $p->{opts} }) {
+                $i++;
+                $opt .= ", " if $i > 1;
+                $opt .= (length($_) > 1 ? '--':'-').$_;
+                $opt .= "=$p->{type}" if $p->{type} && $i==1;
+            }
+            # add non-code aliases
+            for my $al (@{ $sm->{noncode_aliases} // [] }) {
+                $al =~ s/=.+//; $al = (length($al) > 1 ? "--":"-").$al;
+                $opt .= ", $al";
+            }
+            my $arg = $sm->{arg};
+            my $as = $meta->{args}{$arg};
+            my $sum = ($sm->{is_alias} ? (
+                $as->{cmdline_aliases}{$sm->{alias}}{summary} //
+                    "Alias for $sm->{alias_for}"
+                ) : undef) //
+                    $as->{summary};
+            my $sch = ($sm->{is_alias} ?
+                           $as->{cmdline_aliases}{$sm->{alias}}{schema} : undef) //
+                               $as->{schema};
+            if ($sch && $sch->[1]{in}) {
+                $sum .= " (".join("|", @{ $sch->[1]{in} }).")";
+            }
+            push @opts, [$opt, $sum];
+        }
+        for (@opts) { my $l = length($_->[0]); $longest = $l if $l > $longest }
+        push @help, "Options:\n" if @opts;
+        for (@opts) {
+            push @help, sprintf("  %-${longest}s  %s\n",
+                                $_->[0], $_->[1] // "");
+        }
+        push @help, "\n" if @opts;
+    }
+
+    [200, "OK", join("", @help)];
 }
 
 sub run_call {
@@ -304,7 +432,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.01 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-16.
+This document describes version 0.02 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-18.
 
 =head1 SYNOPSIS
 
@@ -321,62 +449,28 @@ P::C). It offers a subset of functionality and a compatible API. Unless you use
 the unsupported features of P::C, P::C::Lite is a drop-in replacement for P::C
 (also see L<Perinci::CmdLine::Any> for automatic fallback).
 
-The main difference is that, to keep dependencies minimal and startup overhead
-small, P::C::Lite does not access code and metadata through the L<Riap> client
-library L<Perinci::Access> layer, but instead accesses Perl modules/packages
-directly.
+P::C::Lite stays lightweight by avoiding the use of libraries that have large
+dependencies or add too much to startup overhead. This include
+L<Perinci::Access> for metadata access, L<Data::Sah> for validator generation,
+L<Text::ANSITable> for formatting results, and L<Log::Any::App> (which uses
+L<Log::Log4perl>) for logging.
+
+I first developed P::C::Lite mainly for CLI applications that utilize shell tab
+completion as their main feature, e.g. L<App::PMUtils>, L<App::ProgUtils>,
+L<App::GitUtils>.
 
 Below is summary of the differences between P::C::Lite and P::C:
 
 =over
 
-=item * No remote URL support
-
-Only code in Perl packages on the filesystem is available.
-
-=item * No automatic validation from schema
-
-As code wrapping and schema code generation by L<Data::Sah> currently adds some
-startup overhead.
-
 =item * P::C::Lite starts much faster
 
-The target is under 0.05s, while P::C can start between 0.2-0.5s.
-
-=item * P::C::Lite does not support color themes
-
-=item * P::C::Lite does not support undo
-
-=item * P::C::Lite does not currently support logging
-
-Something more lightweight than L<Log::Any::App> will be considered. If you want
-to view logging and your function uses L<Log::Any>, you can do something like
-this:
-
- % DEBUG=1 PERL5OPT=-MLog::Any::App app.pl
-
-=item * P::C::Lite does not support progress indicator
-
-=item * P::C::Lite does not support I18N
-
-=item * P::C::Lite does not yet support these Rinci function metadata properties
-
- x.perinci.cmdline.default_format
-
-=item * P::C::Lite does not yet support these Rinci function argument specification properties
-
- cmdline_src
-
-=item * P::C::Lite does not yet support these Rinci result metadata properties/attributes
-
- is_stream
- cmdline.display_result
- cmdline.page_result
- cmdline.pager
+The target is under 0.05s to make shell tab completion convenient. On the other
+hand, P::C can start between 0.2-0.5s.
 
 =item * P::C::Lite uses simpler formatting
 
-Instead of L<Perinci::Result::Format> (especially the 'text' formats which use
+Instead of L<Perinci::Result::Format> (especially for 'text*' formats which use
 L<Data::Format::Pretty::Console> and L<Text::ANSITable>), to keep dependencies
 minimal and formatting quick, P::C::Lite uses the following simple rules that
 work for a significant portion of common data structures:
@@ -404,6 +498,50 @@ YAML and the other formats are not supported.
 Table is printed using the more lightweight and much faster
 L<Text::Table::Tiny>.
 
+=item * No remote URL support in P::C::Lite
+
+Instead of using Perinci::Access, P::C::Lite accesses Perl packages on the
+filesystem directly. This means only code on the filesystem is available. (But I
+plan to write another subclass P::C::Lite::HTTP that uses L<HTTP::Tiny> or
+L<HTTP::Tiny::UNIX> for Riap::HTTP support).
+
+=item * No automatic validation from schema in P::C::Lite
+
+Since code wrapping and schema code generation done by L<Perinci::Sub::Wrapper>
+and L<Data::Sah> (which are called automatically by Perinci::Access) adds too
+much startup overhead.
+
+=item * P::C::Lite does not support color themes
+
+=item * P::C::Lite does not support undo
+
+=item * P::C::Lite does not currently support logging
+
+Something more lightweight than L<Log::Any::App> will be considered. But for
+now, if you want to view logging and your function uses L<Log::Any>, you can do
+something like this:
+
+ % DEBUG=1 PERL5OPT=-MLog::Any::App app.pl
+
+=item * P::C::Lite does not support progress indicator
+
+=item * P::C::Lite does not support I18N
+
+=item * P::C::Lite does not yet support these Rinci function metadata properties
+
+ x.perinci.cmdline.default_format
+
+=item * P::C::Lite does not yet support these Rinci function argument specification properties
+
+ cmdline_src
+
+=item * P::C::Lite does not yet support these Rinci result metadata properties/attributes
+
+ is_stream
+ cmdline.display_result
+ cmdline.page_result
+ cmdline.pager
+
 =item * P::C::Lite does not yet support these environment variables
 
  PERINCI_CMDLINE_COLOR_THEME
@@ -421,15 +559,29 @@ Some functions might expect a L<Perinci::CmdLine> instance.
 
 =back
 
-=for Pod::Coverage ^(hook_.+|)$
+=for Pod::Coverage ^(BUILD|get_meta|hook_.+|run_.+)$
 
-=head1 ENVIRONMENT
+=head1 ATTRIBUTES
+
+All the attributes of L<Perinci::CmdLine::Base>, plus:
 
 =over
 
-=item * PERINCI_CMDLINE_PROGRAM_NAME => STR
+=back
 
-Can be used to set CLI program name.
+=head1 METHODS
+
+All the methods of L<Perinci::CmdLine::Base>, plus:
+
+=over
+
+=back
+
+=head1 ENVIRONMENT
+
+All the environment variables that L<Perinci::CmdLine::Base> supports, plus:
+
+=over
 
 =back
 

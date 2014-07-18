@@ -3,8 +3,8 @@ NAME
     application framework
 
 VERSION
-    This document describes version 0.01 of Perinci::CmdLine::Lite (from
-    Perl distribution Perinci-CmdLine-Lite), released on 2014-07-16.
+    This document describes version 0.02 of Perinci::CmdLine::Lite (from
+    Perl distribution Perinci-CmdLine-Lite), released on 2014-07-18.
 
 SYNOPSIS
     See Perinci::CmdLine::Manual::Examples.
@@ -20,63 +20,26 @@ DESCRIPTION
     replacement for P::C (also see Perinci::CmdLine::Any for automatic
     fallback).
 
-    The main difference is that, to keep dependencies minimal and startup
-    overhead small, P::C::Lite does not access code and metadata through the
-    Riap client library Perinci::Access layer, but instead accesses Perl
-    modules/packages directly.
+    P::C::Lite stays lightweight by avoiding the use of libraries that have
+    large dependencies or add too much to startup overhead. This include
+    Perinci::Access for metadata access, Data::Sah for validator generation,
+    Text::ANSITable for formatting results, and Log::Any::App (which uses
+    Log::Log4perl) for logging.
+
+    I first developed P::C::Lite mainly for CLI applications that utilize
+    shell tab completion as their main feature, e.g. App::PMUtils,
+    App::ProgUtils, App::GitUtils.
 
     Below is summary of the differences between P::C::Lite and P::C:
 
-    *   No remote URL support
-
-        Only code in Perl packages on the filesystem is available.
-
-    *   No automatic validation from schema
-
-        As code wrapping and schema code generation by Data::Sah currently
-        adds some startup overhead.
-
     *   P::C::Lite starts much faster
 
-        The target is under 0.05s, while P::C can start between 0.2-0.5s.
-
-    *   P::C::Lite does not support color themes
-
-    *   P::C::Lite does not support undo
-
-    *   P::C::Lite does not currently support logging
-
-        Something more lightweight than Log::Any::App will be considered. If
-        you want to view logging and your function uses Log::Any, you can do
-        something like this:
-
-         % DEBUG=1 PERL5OPT=-MLog::Any::App app.pl
-
-    *   P::C::Lite does not support progress indicator
-
-    *   P::C::Lite does not support I18N
-
-    *   P::C::Lite does not yet support these Rinci function metadata
-        properties
-
-         x.perinci.cmdline.default_format
-
-    *   P::C::Lite does not yet support these Rinci function argument
-        specification properties
-
-         cmdline_src
-
-    *   P::C::Lite does not yet support these Rinci result metadata
-        properties/attributes
-
-         is_stream
-         cmdline.display_result
-         cmdline.page_result
-         cmdline.pager
+        The target is under 0.05s to make shell tab completion convenient.
+        On the other hand, P::C can start between 0.2-0.5s.
 
     *   P::C::Lite uses simpler formatting
 
-        Instead of Perinci::Result::Format (especially the 'text' formats
+        Instead of Perinci::Result::Format (especially for 'text*' formats
         which use Data::Format::Pretty::Console and Text::ANSITable), to
         keep dependencies minimal and formatting quick, P::C::Lite uses the
         following simple rules that work for a significant portion of common
@@ -107,6 +70,53 @@ DESCRIPTION
         Table is printed using the more lightweight and much faster
         Text::Table::Tiny.
 
+    *   No remote URL support in P::C::Lite
+
+        Instead of using Perinci::Access, P::C::Lite accesses Perl packages
+        on the filesystem directly. This means only code on the filesystem
+        is available. (But I plan to write another subclass P::C::Lite::HTTP
+        that uses HTTP::Tiny or HTTP::Tiny::UNIX for Riap::HTTP support).
+
+    *   No automatic validation from schema in P::C::Lite
+
+        Since code wrapping and schema code generation done by
+        Perinci::Sub::Wrapper and Data::Sah (which are called automatically
+        by Perinci::Access) adds too much startup overhead.
+
+    *   P::C::Lite does not support color themes
+
+    *   P::C::Lite does not support undo
+
+    *   P::C::Lite does not currently support logging
+
+        Something more lightweight than Log::Any::App will be considered.
+        But for now, if you want to view logging and your function uses
+        Log::Any, you can do something like this:
+
+         % DEBUG=1 PERL5OPT=-MLog::Any::App app.pl
+
+    *   P::C::Lite does not support progress indicator
+
+    *   P::C::Lite does not support I18N
+
+    *   P::C::Lite does not yet support these Rinci function metadata
+        properties
+
+         x.perinci.cmdline.default_format
+
+    *   P::C::Lite does not yet support these Rinci function argument
+        specification properties
+
+         cmdline_src
+
+    *   P::C::Lite does not yet support these Rinci result metadata
+        properties/attributes
+
+         is_stream
+         cmdline.display_result
+         cmdline.page_result
+         cmdline.pager
+
     *   P::C::Lite does not yet support these environment variables
 
          PERINCI_CMDLINE_COLOR_THEME
@@ -123,10 +133,15 @@ DESCRIPTION
 
         Some functions might expect a Perinci::CmdLine instance.
 
-ENVIRONMENT
-    *   PERINCI_CMDLINE_PROGRAM_NAME => STR
+ATTRIBUTES
+    All the attributes of Perinci::CmdLine::Base, plus:
 
-        Can be used to set CLI program name.
+METHODS
+    All the methods of Perinci::CmdLine::Base, plus:
+
+ENVIRONMENT
+    All the environment variables that Perinci::CmdLine::Base supports,
+    plus:
 
 SEE ALSO
     Perinci::CmdLine, Perinci::CmdLine::Manual

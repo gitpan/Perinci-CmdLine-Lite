@@ -21,8 +21,9 @@ requires:
   Data::Clean::JSON: '0'
   JSON: '0'
   Mo: '0'
-  Perinci::CmdLine::Base: '0.01'
+  Perinci::CmdLine::Base: '0.04'
   Perinci::Object: '0'
+  Perinci::Sub::GetArgs::Argv: '0.44'
   Perinci::Sub::Normalize: '0.06'
   Rinci: v1.1.41
   Text::Table::Tiny: '0'
@@ -31,7 +32,7 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Perinci-CmdLine-Lite
   homepage: https://metacpan.org/release/Perinci-CmdLine-Lite
   repository: git://github.com/sharyanto/perl-Perinci-CmdLine-Lite.git
-version: '0.01'
+version: '0.02'
 x_Dist_Zilla:
   perl:
     version: '5.018002'
