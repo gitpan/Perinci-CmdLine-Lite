@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-07-18'; # DATE
-our $VERSION = '0.02'; # VERSION
+our $DATE = '2014-07-19'; # DATE
+our $VERSION = '0.06'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -432,7 +432,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.02 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-18.
+This document describes version 0.06 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-19.
 
 =head1 SYNOPSIS
 
