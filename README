@@ -3,16 +3,13 @@ NAME
     application framework
 
 VERSION
-    This document describes version 0.06 of Perinci::CmdLine::Lite (from
-    Perl distribution Perinci-CmdLine-Lite), released on 2014-07-19.
+    This document describes version 0.07 of Perinci::CmdLine::Lite (from
+    Perl distribution Perinci-CmdLine-Lite), released on 2014-07-23.
 
 SYNOPSIS
     See Perinci::CmdLine::Manual::Examples.
 
 DESCRIPTION
-    NOTE: This module is still experimental. Early release, completion not
-    yet implemented.
-
     Perinci::CmdLine::Lite (hereby P::C::Lite) is a lightweight (low startup
     overhead, minimal dependencies) alternative to Perinci::CmdLine (hereby
     P::C). It offers a subset of functionality and a compatible API. Unless
@@ -21,7 +18,7 @@ DESCRIPTION
     fallback).
 
     P::C::Lite stays lightweight by avoiding the use of libraries that have
-    large dependencies or add too much to startup overhead. This include
+    large dependencies or add too much to startup overhead. This includes
     Perinci::Access for metadata access, Data::Sah for validator generation,
     Text::ANSITable for formatting results, and Log::Any::App (which uses
     Log::Log4perl) for logging.

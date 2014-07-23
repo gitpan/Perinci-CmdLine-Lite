@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-07-19'; # DATE
-our $VERSION = '0.06'; # VERSION
+our $DATE = '2014-07-23'; # DATE
+our $VERSION = '0.07'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -107,7 +107,11 @@ sub hook_format_result {
             $format eq 'text-simple' ? 0 : (-t STDOUT);
         no warnings 'uninitialized';
         if ($res->[0] != 200) {
-            return "ERROR $res->[0]: $res->[1]\n";
+            my $fres = "ERROR $res->[0]: $res->[1]";
+            if (my $prev = $res->[3]{prev}) {
+                $fres .= " ($prev->[0]: $prev->[1])";
+            }
+            return "$fres\n";
         } else {
             require Data::Check::Structure;
             my $data = $res->[2];
@@ -116,6 +120,8 @@ sub hook_format_result {
                 $data //= "";
                 $data .= "\n" unless $data =~ /\n\z/;
                 return $data;
+            } elsif (ref($data) eq 'ARRAY' && !@$data) {
+                return "";
             } elsif (Data::Check::Structure::is_aos($data, {max=>$max})) {
                 if ($is_pretty) {
                     require Text::Table::Tiny;
@@ -414,7 +420,11 @@ sub run_call {
     my ($mod, $func) = __require_url($scd->{url});
 
     no strict 'refs';
-    &{"$mod\::$func"}(%{ $r->{args} });
+    my $res = &{"$mod\::$func"}(%{ $r->{args} });
+    if ($r->{meta}{result_naked}) {
+        $res = [200, "OK (enveloped)", $res];
+    }
+    $res;
 }
 
 1;
@@ -432,16 +442,13 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.06 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-19.
+This document describes version 0.07 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-23.
 
 =head1 SYNOPSIS
 
 See L<Perinci::CmdLine::Manual::Examples>.
 
 =head1 DESCRIPTION
-
-B<NOTE: This module is still experimental. Early release, completion not yet
-implemented.>
 
 Perinci::CmdLine::Lite (hereby P::C::Lite) is a lightweight (low startup
 overhead, minimal dependencies) alternative to L<Perinci::CmdLine> (hereby
@@ -450,7 +457,7 @@ the unsupported features of P::C, P::C::Lite is a drop-in replacement for P::C
 (also see L<Perinci::CmdLine::Any> for automatic fallback).
 
 P::C::Lite stays lightweight by avoiding the use of libraries that have large
-dependencies or add too much to startup overhead. This include
+dependencies or add too much to startup overhead. This includes
 L<Perinci::Access> for metadata access, L<Data::Sah> for validator generation,
 L<Text::ANSITable> for formatting results, and L<Log::Any::App> (which uses
 L<Log::Log4perl>) for logging.
