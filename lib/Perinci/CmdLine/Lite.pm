@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-07-23'; # DATE
-our $VERSION = '0.07'; # VERSION
+our $DATE = '2014-07-24'; # DATE
+our $VERSION = '0.08'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -31,7 +31,7 @@ sub BUILD {
                 getopt  => 'version|v',
                 summary => 'Show program version',
                 handler => sub {
-                    my ($r, $go, $val) = @_;
+                    my ($go, $val, $r) = @_;
                     $r->{action} = 'version';
                     $r->{skip_parse_subcommand_argv} = 1;
                 },
@@ -40,7 +40,7 @@ sub BUILD {
                 getopt  => 'help|h|?',
                 summary => 'Show help message',
                 handler => sub {
-                    my ($r, $go, $val) = @_;
+                    my ($go, $val, $r) = @_;
                     $r->{action} = 'help';
                     $r->{skip_parse_subcommand_argv} = 1;
                 },
@@ -49,7 +49,7 @@ sub BUILD {
                 getopt  => 'format=s',
                 summary => 'Set output format (text/text-simple/text-pretty/json/json-pretty)',
                 handler => sub {
-                    my ($r, $go, $val) = @_;
+                    my ($go, $val, $r) = @_;
                     $r->{format} = $val;
                 },
             },
@@ -57,7 +57,7 @@ sub BUILD {
                 getopt  => 'json',
                 summary => 'Set output format to json',
                 handler => sub {
-                    my ($r, $go, $val) = @_;
+                    my ($go, $val, $r) = @_;
                     $r->{format} = 'json';
                 },
             },
@@ -67,7 +67,7 @@ sub BUILD {
                 getopt  => 'subcommands',
                 summary => 'List available subcommands',
                 handler => sub {
-                    my ($r, $go, $val) = @_;
+                    my ($go, $val, $r) = @_;
                     $r->{action} = 'subcommands';
                     $r->{skip_parse_subcommand_argv} = 1;
                 },
@@ -78,7 +78,7 @@ sub BUILD {
                 getopt  => 'cmd=s',
                 summary => 'Select subcommand',
                 handler => sub {
-                    my ($r, $go, $val) = @_;
+                    my ($go, $val, $r) = @_;
                     $r->{subcommand_name} = $val;
                 },
             };
@@ -118,7 +118,7 @@ sub hook_format_result {
             my $max = 5;
             if (!ref($data)) {
                 $data //= "";
-                $data .= "\n" unless $data =~ /\n\z/;
+                $data .= "\n" unless !length($data) || $data =~ /\n\z/;
                 return $data;
             } elsif (ref($data) eq 'ARRAY' && !@$data) {
                 return "";
@@ -248,7 +248,7 @@ sub get_meta {
             getopt  => 'dry-run',
             summary => "Run in simulation mode (also via DRY_RUN=1)",
             handler => sub {
-                my ($r, $go, $val) = @_;
+                my ($go, $val, $r) = @_;
                 $r->{dry_run} = 1;
                 #$ENV{VERBOSE} = 1;
             },
@@ -280,7 +280,7 @@ sub run_subcommands {
 sub run_version {
     my ($self, $r) = @_;
 
-    my $meta = $r->{meta};
+    my $meta = $r->{meta} = $self->get_meta($self->url);
 
     [200, "OK",
      join("",
@@ -326,10 +326,10 @@ sub run_help {
     {
         require Perinci::Sub::GetArgs::Argv;
         my $co = $self->common_opts;
-        my $co_by_ospec = { map {$co->{$_}{getopt} => $_} keys %$co };
+        my $co_by_ospec = { map {$co->{$_}{getopt} => $_ } keys %$co };
         my $res = Perinci::Sub::GetArgs::Argv::gen_getopt_long_spec_from_meta(
             meta         => $meta,
-            common_opts  => { map {$_ => sub{}} keys %$co_by_ospec },
+            common_opts  => $co,
             per_arg_json => $self->{per_arg_json},
             per_arg_yaml => $self->{per_arg_yaml},
         );
@@ -344,9 +344,7 @@ sub run_help {
             my $i = 0;
             my $opt = '';
             # put short aliases back to the back
-            for (sort {
-                (length($a) > 1 ? 0:1) <=> (length($b) > 1 ? 0:1) ||
-                    $a cmp $b } @{ $p->{opts} }) {
+            for (@{ $p->{opts} }) {
                 $i++;
                 $opt .= ", " if $i > 1;
                 $opt .= (length($_) > 1 ? '--':'-').$_;
@@ -373,9 +371,7 @@ sub run_help {
             my $i = 0;
             my $opt = '';
             # put short aliases back to the back
-            for (sort {
-                (length($a) > 1 ? 0:1) <=> (length($b) > 1 ? 0:1) ||
-                    $a cmp $b } @{ $p->{opts} }) {
+            for (@{ $p->{opts} }) {
                 $i++;
                 $opt .= ", " if $i > 1;
                 $opt .= (length($_) > 1 ? '--':'-').$_;
@@ -442,7 +438,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.07 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-23.
+This document describes version 0.08 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-24.
 
 =head1 SYNOPSIS
 

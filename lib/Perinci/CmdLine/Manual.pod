@@ -18,7 +18,7 @@ Perinci::CmdLine::Manual - Perinci::CmdLine manual
 
 =head1 VERSION
 
-This document describes version 0.07 of Perinci::CmdLine::Manual (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-23.
+This document describes version 0.08 of Perinci::CmdLine::Manual (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-24.
 
 =head1 DESCRIPTION
 
