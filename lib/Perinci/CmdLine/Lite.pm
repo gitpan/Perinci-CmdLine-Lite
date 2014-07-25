@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-07-24'; # DATE
-our $VERSION = '0.08'; # VERSION
+our $DATE = '2014-07-25'; # DATE
+our $VERSION = '0.09'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -418,7 +418,7 @@ sub run_call {
     no strict 'refs';
     my $res = &{"$mod\::$func"}(%{ $r->{args} });
     if ($r->{meta}{result_naked}) {
-        $res = [200, "OK (enveloped)", $res];
+        $res = [200, "OK (envelope added by ".__PACKAGE__.")", $res];
     }
     $res;
 }
@@ -438,7 +438,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.08 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-24.
+This document describes version 0.09 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-25.
 
 =head1 SYNOPSIS
 

@@ -20,7 +20,7 @@ my %WriteMakefileArgs = (
   "LICENSE" => "perl",
   "NAME" => "Perinci::CmdLine::Lite",
   "PREREQ_PM" => {
-    "Complete::Bash" => "0.06",
+    "Complete::Bash" => "0.09",
     "Complete::Util" => "0.13",
     "Data::Check::Structure" => 0,
     "Data::Clean::JSON" => 0,
@@ -41,7 +41,7 @@ my %WriteMakefileArgs = (
     "Perinci::Examples" => "0.25",
     "Test::More" => "0.98"
   },
-  "VERSION" => "0.08",
+  "VERSION" => "0.09",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -50,7 +50,7 @@ my %WriteMakefileArgs = (
 
 my %FallbackPrereqs = (
   "Capture::Tiny" => 0,
-  "Complete::Bash" => "0.06",
+  "Complete::Bash" => "0.09",
   "Complete::Util" => "0.13",
   "Data::Check::Structure" => 0,
   "Data::Clean::JSON" => 0,

@@ -18,7 +18,7 @@ Perinci::CmdLine::Manual::Examples - Collection of examples
 
 =head1 VERSION
 
-This document describes version 0.08 of Perinci::CmdLine::Manual::Examples (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-24.
+This document describes version 0.09 of Perinci::CmdLine::Manual::Examples (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-25.
 
 =head1 DESCRIPTION
 

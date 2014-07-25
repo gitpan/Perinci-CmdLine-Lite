@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-07-24'; # DATE
-our $VERSION = '0.08'; # VERSION
+our $DATE = '2014-07-25'; # DATE
+our $VERSION = '0.09'; # VERSION
 
 use 5.010001;
 
@@ -105,23 +105,22 @@ sub do_completion {
     # check whether subcommand is defined. try to search from --cmd, first
     # command-line argument, or default_subcommand.
 
+    my ($words, $cword) = @{ Complete::Bash::parse_cmdline(
+        undef, undef, $word_breaks) };
+    shift @$words; $cword--; # strip command name
+
     {
-        # @ARGV given by bash is messed up / different, we get words from
-        # parsing, COMP_LINE/COMP_POINT. this might not be the case with other
-        # shells like zsh/fish. XXX detect running shell.
-        my $words = Complete::Bash::break_cmdline_into_words(
-            $ENV{COMP_LINE}, $word_breaks);
-        shift @$words; # shave program name
+        # @ARGV given by bash is messed up / different. during completion, we
+        # get ARGV from parsing COMP_LINE/COMP_POINT. this might not be the case
+        # with other shells like zsh/fish. XXX detect and support other shell.
         local @ARGV = @$words;
+        shift @ARGV;
         $self->_parse_argv1($r);
     }
 
     # force format to text for completion, because user might type 'cmd --format
     # blah -^'.
     $r->{format} = 'text';
-
-    my ($words, $cword) = @{ Complete::Bash::parse_cmdline(
-        undef, undef, $word_breaks) };
 
     my $scn = $r->{subcommand_name} // "";
     my $scd = $r->{subcommand_data};
@@ -436,7 +435,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.08 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-24.
+This document describes version 0.09 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-25.
 
 =for Pod::Coverage ^(.+)$
 

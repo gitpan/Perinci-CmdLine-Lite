@@ -19,7 +19,7 @@ meta-spec:
   version: '1.4'
 name: Perinci-CmdLine-Lite
 requires:
-  Complete::Bash: '0.06'
+  Complete::Bash: '0.09'
   Complete::Util: '0.13'
   Data::Check::Structure: '0'
   Data::Clean::JSON: '0'
@@ -36,7 +36,7 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Perinci-CmdLine-Lite
   homepage: https://metacpan.org/release/Perinci-CmdLine-Lite
   repository: git://github.com/sharyanto/perl-Perinci-CmdLine-Lite.git
-version: '0.08'
+version: '0.09'
 x_Dist_Zilla:
   perl:
     version: '5.018002'

@@ -1,7 +1,7 @@
 package Test::Perinci::CmdLine;
 
-our $DATE = '2014-07-24'; # DATE
-our $VERSION = '0.08'; # VERSION
+our $DATE = '2014-07-25'; # DATE
+our $VERSION = '0.09'; # VERSION
 
 use 5.010;
 use strict;
@@ -76,7 +76,7 @@ sub test_complete {
     my $comp_point = index($comp_line, '^');
     $comp_point >= 0 or
         die "BUG: comp_line0 should contain ^ to indicate where comp_point is";
-    $comp_point =~ s/\^//;
+    $comp_line =~ s/\^//;
 
     local $ENV{COMP_LINE}  = $comp_line;
     local $ENV{COMP_POINT} = $comp_point;
@@ -110,7 +110,7 @@ Test::Perinci::CmdLine - Test library for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.08 of Test::Perinci::CmdLine (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-24.
+This document describes version 0.09 of Test::Perinci::CmdLine (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-25.
 
 =head1 FUNCTIONS
 
