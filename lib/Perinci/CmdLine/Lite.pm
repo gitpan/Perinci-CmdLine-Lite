@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-07-25'; # DATE
-our $VERSION = '0.09'; # VERSION
+our $DATE = '2014-07-29'; # DATE
+our $VERSION = '0.10'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -47,7 +47,9 @@ sub BUILD {
             },
             format => {
                 getopt  => 'format=s',
-                summary => 'Set output format (text/text-simple/text-pretty/json/json-pretty)',
+                summary => 'Set output format)',
+                schema => ['str*' => in => [qw/text text-simple text-pretty
+                                               json json-pretty/]],
                 handler => sub {
                     my ($go, $val, $r) = @_;
                     $r->{format} = $val;
@@ -80,6 +82,7 @@ sub BUILD {
                 handler => sub {
                     my ($go, $val, $r) = @_;
                     $r->{subcommand_name} = $val;
+                    $r->{subcommand_name_from} = '--cmd';
                 },
             };
         }
@@ -343,14 +346,13 @@ sub run_help {
             next if $scn && $k eq 'subcommands';
             my $i = 0;
             my $opt = '';
-            # put short aliases back to the back
             for (@{ $p->{opts} }) {
                 $i++;
                 $opt .= ", " if $i > 1;
                 $opt .= (length($_) > 1 ? '--':'-').$_;
                 $opt .= "=$p->{type}" if $p->{type} && $i==1;
             }
-            push @opts, [$opt, $co->{$co_by_ospec->{ $sms->{$k}{orig_spec} }}{summary}];
+            push @opts, [$opt, $co->{$co_by_ospec->{$k}}{summary}];
         }
         my $longest = 6;
         for (@opts) { my $l = length($_->[0]); $longest = $l if $l > $longest }
@@ -370,7 +372,6 @@ sub run_help {
             my $p = $sm->{parsed};
             my $i = 0;
             my $opt = '';
-            # put short aliases back to the back
             for (@{ $p->{opts} }) {
                 $i++;
                 $opt .= ", " if $i > 1;
@@ -438,7 +439,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.09 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-25.
+This document describes version 0.10 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-29.
 
 =head1 SYNOPSIS
 
