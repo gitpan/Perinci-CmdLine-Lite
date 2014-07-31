@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-07-29'; # DATE
-our $VERSION = '0.10'; # VERSION
+our $DATE = '2014-07-31'; # DATE
+our $VERSION = '0.11'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -301,28 +301,62 @@ sub run_help {
     my ($self, $r) = @_;
 
     my @help;
-    my $scn  = $r->{subcommand_name};
-    my $scd  = $r->{subcommand_data};
-    my $meta = $self->get_meta($scd->{url} // $self->{url});
+    my $scn    = $r->{subcommand_name};
+    my $scd    = $r->{subcommand_data};
+    my $meta   = $self->get_meta($scd->{url} // $self->{url});
+    my $args_p = $meta->{args} // {};
 
     # summary
-    push @help, $self->get_program_and_subcommand_name($r);
+    my $cmdname = $self->get_program_and_subcommand_name($r);
+    push @help, $cmdname;
     {
         my $sum = ($scd ? $scd->{summary} : undef) //
             $meta->{summary};
         last unless $sum;
-        push @help, " - ", $sum;
+        push @help, " - ", $sum, "\n";
+    }
+
+    # usage
+    push @help, "\n";
+    push @help, "Usage:\n";
+    {
+        push @help, "  $cmdname --help (or -h, -?)\n";
+        push @help, "  $cmdname --verbose (or -v)\n";
+        my @args;
+        my %args = %{ $args_p };
+        my $max_pos = -1;
+        for (values %args) {
+            $max_pos = $_->{pos} if defined($_->{pos}) && $_->{pos} > $max_pos;
+        }
+        my $pos = 0;
+        while ($pos <= $max_pos) {
+            my ($arg, $as);
+            for (keys %args) {
+                $as = $args{$_};
+                if (defined($as->{pos}) && $as->{pos}==$pos) { $arg=$_; last }
+            }
+            next unless defined($arg);
+            if ($as->{req}) {
+                push @args, "<$arg>" . ($as->{greedy} ? " ...":"");
+            } else {
+                push @args, "[$arg]" . ($as->{greedy} ? " ...":"");
+            }
+            delete $args{$arg};
+            $pos++;
+        }
+        unshift @args, "[options]" if keys %args;
+        push @help, "  $cmdname ".join(" ", @args)."\n";
     }
 
     # description
-    push @help, "\n\n";
+    push @help, "\n";
     {
         my $desc = ($scd ? $scd->{description} : undef) //
             $meta->{description};
         last unless $desc;
         $desc =~ s/\A\n+//;
         $desc =~ s/\n+\z//;
-        push @help, $desc, "\n\n";
+        push @help, $desc, "\n";
     }
 
     # options
@@ -356,12 +390,11 @@ sub run_help {
         }
         my $longest = 6;
         for (@opts) { my $l = length($_->[0]); $longest = $l if $l > $longest }
-        push @help, "Common options:\n" if @opts;
+        push @help, "\nCommon options:\n" if @opts;
         for (@opts) {
             push @help, sprintf("  %-${longest}s  %s\n",
                                 $_->[0], $_->[1] // "");
         }
-        push @help, "\n" if @opts;
 
         # now the rest
         @opts = ();
@@ -384,12 +417,17 @@ sub run_help {
                 $opt .= ", $al";
             }
             my $arg = $sm->{arg};
-            my $as = $meta->{args}{$arg};
-            my $sum = ($sm->{is_alias} ? (
-                $as->{cmdline_aliases}{$sm->{alias}}{summary} //
-                    "Alias for $sm->{alias_for}"
-                ) : undef) //
-                    $as->{summary};
+            my $as = $args_p->{$arg};
+            my $sum = join(
+                "",
+                (defined($as->{pos}) ? "(or via arg #$as->{pos}".
+                     ($as->{greedy} ? "+":"").") " : ""),
+                (($sm->{is_alias} ? (
+                    $as->{cmdline_aliases}{$sm->{alias}}{summary} //
+                        "Alias for $sm->{alias_for}"
+                    ) : undef) //
+                        $as->{summary})
+            );
             my $sch = ($sm->{is_alias} ?
                            $as->{cmdline_aliases}{$sm->{alias}}{schema} : undef) //
                                $as->{schema};
@@ -399,7 +437,7 @@ sub run_help {
             push @opts, [$opt, $sum];
         }
         for (@opts) { my $l = length($_->[0]); $longest = $l if $l > $longest }
-        push @help, "Options:\n" if @opts;
+        push @help, "\nOptions:\n" if @opts;
         for (@opts) {
             push @help, sprintf("  %-${longest}s  %s\n",
                                 $_->[0], $_->[1] // "");
@@ -416,11 +454,39 @@ sub run_call {
     my $scd = $r->{subcommand_data};
     my ($mod, $func) = __require_url($scd->{url});
 
-    no strict 'refs';
-    my $res = &{"$mod\::$func"}(%{ $r->{args} });
+    # convert args
+    my $aa = $r->{meta}{args_as} // 'hash';
+    my @args;
+    if ($aa =~ /array/) {
+        require Perinci::Sub::ConvertArgs::Array;
+        my $convres = Perinci::Sub::ConvertArgs::Array::convert_args_to_array(
+            args => $r->{args}, meta => $r->{meta},
+        );
+        return $convres unless $convres->[0] == 200;
+        if ($aa =~ /ref/) {
+            @args = ($convres->[2]);
+        } else {
+            @args = @{ $convres->[2] };
+        }
+    } elsif ($aa eq 'hashref') {
+        @args = ({ %{ $r->{args} } });
+    } else {
+        # hash
+        @args = %{ $r->{args} };
+    }
+
+    # call!
+    my $res;
+    {
+        no strict 'refs';
+        $res = &{"$mod\::$func"}(@args);
+    }
+
+    # add envelope
     if ($r->{meta}{result_naked}) {
         $res = [200, "OK (envelope added by ".__PACKAGE__.")", $res];
     }
+
     $res;
 }
 
@@ -439,7 +505,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.10 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-29.
+This document describes version 0.11 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-31.
 
 =head1 SYNOPSIS
 

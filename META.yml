@@ -7,7 +7,7 @@ build_requires:
   File::Spec: '0'
   IO::Handle: '0'
   IPC::Open3: '0'
-  Perinci::Examples: '0.27'
+  Perinci::Examples: '0.28'
   Test::More: '0.98'
 configure_requires:
   ExtUtils::MakeMaker: '6.30'
@@ -27,6 +27,7 @@ requires:
   Mo: '0'
   Perinci::Object: '0'
   Perinci::Sub::Complete: '0.60'
+  Perinci::Sub::ConvertArgs::Array: '0.06'
   Perinci::Sub::GetArgs::Argv: '0.46'
   Perinci::Sub::Normalize: '0.06'
   Rinci: v1.1.41
@@ -36,7 +37,7 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Perinci-CmdLine-Lite
   homepage: https://metacpan.org/release/Perinci-CmdLine-Lite
   repository: git://github.com/sharyanto/perl-Perinci-CmdLine-Lite.git
-version: '0.10'
+version: '0.11'
 x_Dist_Zilla:
   perl:
     version: '5.018001'

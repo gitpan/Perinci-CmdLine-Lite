@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-07-29'; # DATE
-our $VERSION = '0.10'; # VERSION
+our $DATE = '2014-07-31'; # DATE
+our $VERSION = '0.11'; # VERSION
 
 use 5.010001;
 
@@ -182,10 +182,10 @@ sub _parse_argv1 {
         my $scn_from = $r->{subcommand_name_from};
         if (!defined($scn) && defined($self->{default_subcommand})) {
             # get from default_subcommand
-            if ($self->{get_subcommand_from_arg} == 1) {
+            if ($self->get_subcommand_from_arg == 1) {
                 $scn = $self->{default_subcommand};
                 $scn_from = 'default_subcommand';
-            } elsif ($self->{get_subcommand_from_arg} == 2 && !@ARGV) {
+            } elsif ($self->get_subcommand_from_arg == 2 && !@ARGV) {
                 $scn = $self->{default_subcommand};
                 $scn_from = 'default_subcommand';
             }
@@ -379,7 +379,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.10 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-29.
+This document describes version 0.11 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-31.
 
 =for Pod::Coverage ^(.+)$
 
