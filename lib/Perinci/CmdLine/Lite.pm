@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-07-31'; # DATE
-our $VERSION = '0.11'; # VERSION
+our $DATE = '2014-08-07'; # DATE
+our $VERSION = '0.12'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -83,6 +83,13 @@ sub BUILD {
                     my ($go, $val, $r) = @_;
                     $r->{subcommand_name} = $val;
                     $r->{subcommand_name_from} = '--cmd';
+                },
+                completion => sub {
+                    require Complete::Util;
+                    my %args = @_;
+                    Complete::Util::complete_array_elem(
+                        array => [keys %{ $self->list_subcommands }],
+                        word => $args{word});
                 },
             };
         }
@@ -505,7 +512,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.11 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-07-31.
+This document describes version 0.12 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-07.
 
 =head1 SYNOPSIS
 
