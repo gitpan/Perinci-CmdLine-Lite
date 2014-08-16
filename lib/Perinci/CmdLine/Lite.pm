@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-08-07'; # DATE
-our $VERSION = '0.12'; # VERSION
+our $DATE = '2014-08-16'; # DATE
+our $VERSION = '0.13'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -47,7 +47,7 @@ sub BUILD {
             },
             format => {
                 getopt  => 'format=s',
-                summary => 'Set output format)',
+                summary => 'Set output format',
                 schema => ['str*' => in => [qw/text text-simple text-pretty
                                                json json-pretty/]],
                 handler => sub {
@@ -425,15 +425,13 @@ sub run_help {
             }
             my $arg = $sm->{arg};
             my $as = $args_p->{$arg};
+            my $alspec = $sm->{alias} ? $as->{cmdline_aliases}{$sm->{alias}} : {};
             my $sum = join(
                 "",
                 (defined($as->{pos}) ? "(or via arg #$as->{pos}".
                      ($as->{greedy} ? "+":"").") " : ""),
-                (($sm->{is_alias} ? (
-                    $as->{cmdline_aliases}{$sm->{alias}}{summary} //
-                        "Alias for $sm->{alias_for}"
-                    ) : undef) //
-                        $as->{summary})
+                ($sm->{alias_for} ? $alspec->{summary} // "Alias for $sm->{alias_for}" :
+                     $as->{summary} // ''),
             );
             my $sch = ($sm->{is_alias} ?
                            $as->{cmdline_aliases}{$sm->{alias}}{schema} : undef) //
@@ -512,7 +510,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.12 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-07.
+This document describes version 0.13 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-16.
 
 =head1 SYNOPSIS
 
