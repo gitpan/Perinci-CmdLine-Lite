@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
 our $DATE = '2014-08-16'; # DATE
-our $VERSION = '0.13'; # VERSION
+our $VERSION = '0.14'; # VERSION
 
 use 5.010001;
 
@@ -164,7 +164,7 @@ sub _parse_argv1 {
 
         require Getopt::Long;
         my $old_go_conf = Getopt::Long::Configure(
-            'pass_through', 'permute', 'no_auto_abbrev');
+            'pass_through', 'permute', 'no_ignore_case', 'no_auto_abbrev');
         my @go_spec;
         my $co = $self->common_opts // {};
         for my $k (keys %$co) {
@@ -380,7 +380,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.13 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-16.
+This document describes version 0.14 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-16.
 
 =for Pod::Coverage ^(.+)$
 

@@ -68,7 +68,7 @@
          "web" : "https://github.com/sharyanto/perl-Perinci-CmdLine-Lite"
       }
    },
-   "version" : "0.13",
+   "version" : "0.14",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.018001"
@@ -313,6 +313,11 @@
             "class" : "Dist::Zilla::Plugin::Rinci::Validate",
             "name" : "@Author::SHARYANTO/Rinci::Validate",
             "version" : "0.13"
+         },
+         {
+            "class" : "Dist::Zilla::Plugin::SetScriptShebang",
+            "name" : "@Author::SHARYANTO/SetScriptShebang",
+            "version" : "0.01"
          },
          {
             "class" : "Dist::Zilla::Plugin::SHARYANTO::OurPkgVersion",
