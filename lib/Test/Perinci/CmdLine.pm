@@ -1,7 +1,7 @@
 package Test::Perinci::CmdLine;
 
-our $DATE = '2014-08-21'; # DATE
-our $VERSION = '0.15'; # VERSION
+our $DATE = '2014-08-22'; # DATE
+our $VERSION = '0.16'; # VERSION
 
 use 5.010;
 use strict;
@@ -47,7 +47,8 @@ sub test_run {
         }
 
         if ($args{status}) {
-            is($res->[0], $args{status}, "status");
+            is($res->[0], $args{status}, "status")
+                or diag explain $res;
         }
 
         if ($args{output_re}) {
@@ -110,7 +111,7 @@ Test::Perinci::CmdLine - Test library for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.15 of Test::Perinci::CmdLine (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-21.
+This document describes version 0.16 of Test::Perinci::CmdLine (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-22.
 
 =head1 FUNCTIONS
 

@@ -3,8 +3,8 @@ NAME
     application framework
 
 VERSION
-    This document describes version 0.15 of Perinci::CmdLine::Lite (from
-    Perl distribution Perinci-CmdLine-Lite), released on 2014-08-21.
+    This document describes version 0.16 of Perinci::CmdLine::Lite (from
+    Perl distribution Perinci-CmdLine-Lite), released on 2014-08-22.
 
 SYNOPSIS
     See Perinci::CmdLine::Manual::Examples.

@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-08-21'; # DATE
-our $VERSION = '0.15'; # VERSION
+our $DATE = '2014-08-22'; # DATE
+our $VERSION = '0.16'; # VERSION
 
 use 5.010001;
 
@@ -76,7 +76,7 @@ sub list_subcommands {
     if ($scs) {
         if (ref($scs) eq 'CODE') {
             $scs = $scs->($self);
-            $self->_err("Subcommands code didn't return a hashref")
+            die [500, "BUG: Subcommands code didn't return a hashref"]
                 unless ref($scs) eq 'HASH';
         }
         $res = $scs;
@@ -279,12 +279,20 @@ sub parse_argv {
             $old_handlers{$_} = $h;
         }
 
+        my $has_cmdline_src;
+        for my $av (values %{ $meta->{args} // {} }) {
+            if ($av->{cmdline_src}) {
+                $has_cmdline_src = 1;
+                last;
+            }
+        }
+
         require Perinci::Sub::GetArgs::Argv;
         my $res = Perinci::Sub::GetArgs::Argv::get_args_from_argv(
             argv                => \@ARGV,
             args                => $scd->{args} ? { %{$scd->{args}} } : undef,
             meta                => $meta,
-            allow_extra_elems   => 0,
+            allow_extra_elems   => $has_cmdline_src ? 1:0,
             per_arg_json        => $self->{per_arg_json},
             per_arg_yaml        => $self->{per_arg_yaml},
             common_opts         => $copts,
@@ -335,6 +343,7 @@ sub run {
             die $parse_res;
         }
         $r->{parse_argv_res} = $parse_res;
+        $r->{args} = $parse_res->[2] // {};
 
         # set defaults
         $r->{action} //= 'call';
@@ -345,7 +354,6 @@ sub run {
             if $missing && @$missing;
 
         my $args = $parse_res->[2];
-        $r->{args} = $args // {};
         my $scd = $r->{subcommand_data};
         $args->{-cmdline} = $self if $scd->{pass_cmdline_object} //
             $self->pass_cmdline_object;
@@ -398,7 +406,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.15 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-21.
+This document describes version 0.16 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-22.
 
 =for Pod::Coverage ^(.+)$
 
