@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-08-24'; # DATE
-our $VERSION = '0.19'; # VERSION
+our $DATE = '2014-08-25'; # DATE
+our $VERSION = '0.20'; # VERSION
 
 use 5.010001;
 
@@ -38,6 +38,31 @@ has subcommands => (is=>'rw');
 has summary => (is=>'rw');
 has tags => (is=>'rw');
 has url => (is=>'rw');
+
+has read_config => (is=>'rw', default=>1);
+has config_filename => (
+    is=>'rw',
+    default => sub {
+        my $self = shift;
+        my $pn;
+        # can't refer to $self, in Mo? so we reconstruct program_name
+        if ($self->program_name) {
+            $pn = $self->program_name;
+        } else {
+            $pn = $ENV{PERINCI_CMDLINE_PROGRAM_NAME};
+            if (!defined($pn)) {
+                $pn = $0; $pn =~ s!.+/!!;
+            }
+        }
+        $pn . ".conf";
+    },
+);
+has config_dirs => (
+    is=>'rw',
+    default => sub {
+        ["/etc", $ENV{HOME}];
+    },
+);
 
 # role: requires 'get_meta' # ($url)
 
@@ -156,6 +181,33 @@ sub do_completion {
     [200, "OK", Complete::Bash::format_completion($compres)];
 }
 
+sub _read_config {
+    require Config::IOD::Reader;
+
+    my ($self, $r) = @_;
+
+    if (!$r->{config_paths}) {
+        $r->{config_paths} = [];
+        for my $dir (@{ $self->config_dirs }) {
+            my $path = "$dir/" . $self->config_filename;
+            push @{ $r->{config_paths} }, $path if -e $path;
+        }
+    }
+
+    my $reader = Config::IOD::Reader->new;
+    my %res;
+    for my $path (@{ $r->{config_paths} }) {
+        my $hoh = $reader->read_file($path);
+        for my $section (keys %$hoh) {
+            my $hash = $hoh->{$section};
+            for (keys %$hash) {
+                $res{$section}{$_} = $hash->{$_};
+            }
+        }
+    }
+    \%res;
+}
+
 sub _parse_argv1 {
     my ($self, $r) = @_;
 
@@ -245,7 +297,8 @@ sub parse_argv {
     # able to catch --help, --version, etc early without having to know about
     # subcommands. two reasons for this: sometimes we need to get subcommand
     # name *from* cmdline opts (e.g. --cmd) and thus it's a chicken-and-egg
-    # problem. second, it's faster (especially in P::C case).
+    # problem. second, it's faster because we don't have to load Riap client and
+    # request the meta through it (especially in the case of remote URL).
     #
     # the second parse is after ge get subcommand name and the function
     # metadata. we can parse the remaining argv to get function arguments.
@@ -259,15 +312,44 @@ sub parse_argv {
 
     my %args;
 
+    # read from configuration
+    if ($r->{read_config}) {
+        my $conf = $self->_read_config($r);
+        my $scn  = $r->{subcommand_name};
+        my $profile = $r->{config_profile};
+        for my $section (keys %$conf) {
+            if (defined $profile) {
+                if (length $scn) {
+                    next unless $section =~ /\A\Q$scn\E\s+\Q$profile\E\z/;
+                } else {
+                    next unless $section eq $profile;
+                }
+            } else {
+                if (length $scn) {
+                    next unless $section eq $scn;
+                } else {
+                    next unless $section eq 'GLOBAL';
+                }
+            }
+            $args{$_} = $conf->{$section}{$_}
+                for keys %{ $conf->{$section} };
+            last;
+        }
+    }
+
     # parse argv for per-subcommand command-line opts
     if ($r->{skip_parse_subcommand_argv}) {
-        return [200, "OK (subcommand options parsing skipped)", \%args];
+        return [200, "OK (subcommand options parsing skipped)"];
     } else {
         my $scd = $r->{subcommand_data};
         my $meta = $self->get_meta($scd->{url});
         $r->{meta} = $meta;
 
         $r->{format} //= $meta->{'cmdline.default_format'};
+
+        if ($scd->{args}) {
+            $args{$_} = $scd->{args}{$_} for keys %{ $scd->{args} };
+        }
 
         # since get_args_from_argv() doesn't pass $r, we need to wrap it
         my $copts = $self->common_opts;
@@ -292,7 +374,7 @@ sub parse_argv {
         require Perinci::Sub::GetArgs::Argv;
         my $res = Perinci::Sub::GetArgs::Argv::get_args_from_argv(
             argv                => \@ARGV,
-            args                => $scd->{args} ? { %{$scd->{args}} } : undef,
+            args                => \%args,
             meta                => $meta,
             allow_extra_elems   => $has_cmdline_src ? 1:0,
             per_arg_json        => $self->{per_arg_json},
@@ -330,6 +412,10 @@ sub run {
     if ($ENV{COMP_LINE}) {
         $r->{res} = $self->do_completion($r);
         goto FORMAT;
+    }
+
+    if ($self->read_config) {
+        $r->{read_config} = 1;
     }
 
     eval {
@@ -416,7 +502,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.19 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-24.
+This document describes version 0.20 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-25.
 
 =for Pod::Coverage ^(.+)$
 
@@ -433,6 +519,12 @@ Selected action to use. Usually set from the common options.
 =item * format => str
 
 Selected format to use. Usually set from the common option C<--format>.
+
+=item * read_config => bool
+
+=item * config_paths => array of str
+
+=item * config_profile => str
 
 =item * parse_argv_res => array
 
@@ -493,21 +585,6 @@ Result from C<hook_format_result()>.
 
 Contains a list of known actions and their metadata. Keys should be action
 names, values should be metadata. Metadata is a hash containing these keys:
-
-=over
-
-=item * default_log => BOOL (optional)
-
-Whether to enable logging by default (Log::Any::App) when C<LOG> environment
-variable is not set. To speed up program startup, logging is by default turned
-off for simple actions like C<help>, C<list>, C<version>.
-
-=item * use_utf8 => BOOL (optional)
-
-Whether to issue C<< binmode(STDOUT, ":utf8") >>. See L</"UTF8 OUTPUT"> for more
-details.
-
-=back
 
 =head2 common_opts => hash
 
@@ -679,8 +756,6 @@ e.g. HTTP basic authentication to Riap client
 
 =head2 subcommands => hash | code
 
-=head2 subcommands => {NAME => {ARGUMENT=>...}, ...} | CODEREF
-
 Should be a hash of subcommand specifications or a coderef.
 
 Each subcommand specification is also a hash(ref) and should contain these keys:
@@ -778,6 +853,22 @@ entity.
 
 Alternatively you can provide multiple functions from which the user can select
 using the first argument (see B<subcommands>).
+
+=head2 read_config => bool (default: 1)
+
+Whether to read configuration files.
+
+=head2 config_dirs => array of str
+
+Which directories to look for configuration file. The default is to look at the
+system location and then per-user home directory. On Unix, it's C<< ["/etc",
+$ENV{HOME}] >>.
+
+=head2 config_filename => str
+
+Configuration filename. The default is C<< program_name . ".conf" >>. For
+example, if your program is named C<foo-bar>, config_filename will be
+C<foo-bar.conf>.
 
 =head1 METHODS
 

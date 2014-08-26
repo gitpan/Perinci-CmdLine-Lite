@@ -4,6 +4,7 @@ author:
   - 'Steven Haryanto <stevenharyanto@gmail.com>'
 build_requires:
   Capture::Tiny: '0'
+  File::Slurp::Tiny: '0'
   File::Spec: '0'
   IO::Handle: '0'
   IPC::Open3: '0'
@@ -21,6 +22,7 @@ name: Perinci-CmdLine-Lite
 requires:
   Complete::Bash: '0.09'
   Complete::Util: '0.13'
+  Config::IOD::Reader: '0'
   Data::Check::Structure: '0'
   Data::Clean::JSON: '0'
   JSON: '0'
@@ -37,7 +39,7 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Perinci-CmdLine-Lite
   homepage: https://metacpan.org/release/Perinci-CmdLine-Lite
   repository: git://github.com/sharyanto/perl-Perinci-CmdLine-Lite.git
-version: '0.19'
+version: '0.20'
 x_Dist_Zilla:
   perl:
     version: '5.018002'

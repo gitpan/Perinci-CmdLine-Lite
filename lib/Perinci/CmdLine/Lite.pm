@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-08-24'; # DATE
-our $VERSION = '0.19'; # VERSION
+our $DATE = '2014-08-25'; # DATE
+our $VERSION = '0.20'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -92,6 +92,33 @@ sub BUILD {
                     Complete::Util::complete_array_elem(
                         array => [keys %{ $self->list_subcommands }],
                         word => $args{word});
+                },
+            };
+        }
+        if ($self->read_config) {
+            $co->{config_path} = {
+                getopt  => 'config-path=s@',
+                summary => 'Set path to configuration file',
+                handler => sub {
+                    my ($go, $val, $r) = @_;
+                    $r->{config_paths} //= [];
+                    push @{ $r->{config_paths} }, $val;
+                },
+            };
+            $co->{no_config} = {
+                getopt  => 'noconfig|no-config',
+                summary => 'Do not use any configuration file',
+                handler => sub {
+                    my ($go, $val, $r) = @_;
+                    $r->{read_config} = 0;
+                },
+            };
+            $co->{config_profile} = {
+                getopt  => 'config-profile=s',
+                summary => 'Set configuration profile to use',
+                handler => sub {
+                    my ($go, $val, $r) = @_;
+                    $r->{config_profile} = $val;
                 },
             };
         }
@@ -512,7 +539,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.19 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-24.
+This document describes version 0.20 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-25.
 
 =head1 SYNOPSIS
 

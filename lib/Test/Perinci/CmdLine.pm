@@ -1,7 +1,7 @@
 package Test::Perinci::CmdLine;
 
-our $DATE = '2014-08-24'; # DATE
-our $VERSION = '0.19'; # VERSION
+our $DATE = '2014-08-25'; # DATE
+our $VERSION = '0.20'; # VERSION
 
 use 5.010;
 use strict;
@@ -19,7 +19,10 @@ our $CLASS = "Perinci::CmdLine";
 sub test_run {
     my %args = @_;
 
-    my $cmd = $CLASS->new(%{$args{args}}, exit=>0);
+    my %cmdargs = %{$args{args}};
+    $cmdargs{exit} = 0;
+    $cmdargs{read_config} //= 0;
+    my $cmd = $CLASS->new(%cmdargs);
 
     local @ARGV = @{$args{argv} // []};
     my ($stdout, $stderr);
@@ -111,7 +114,7 @@ Test::Perinci::CmdLine - Test library for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.19 of Test::Perinci::CmdLine (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-24.
+This document describes version 0.20 of Test::Perinci::CmdLine (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-25.
 
 =head1 FUNCTIONS
 

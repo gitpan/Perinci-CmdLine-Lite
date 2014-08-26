@@ -22,6 +22,7 @@ my %WriteMakefileArgs = (
   "PREREQ_PM" => {
     "Complete::Bash" => "0.09",
     "Complete::Util" => "0.13",
+    "Config::IOD::Reader" => 0,
     "Data::Check::Structure" => 0,
     "Data::Clean::JSON" => 0,
     "JSON" => 0,
@@ -36,13 +37,14 @@ my %WriteMakefileArgs = (
   },
   "TEST_REQUIRES" => {
     "Capture::Tiny" => 0,
+    "File::Slurp::Tiny" => 0,
     "File::Spec" => 0,
     "IO::Handle" => 0,
     "IPC::Open3" => 0,
     "Perinci::Examples" => "0.31",
     "Test::More" => "0.98"
   },
-  "VERSION" => "0.19",
+  "VERSION" => "0.20",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -53,8 +55,10 @@ my %FallbackPrereqs = (
   "Capture::Tiny" => 0,
   "Complete::Bash" => "0.09",
   "Complete::Util" => "0.13",
+  "Config::IOD::Reader" => 0,
   "Data::Check::Structure" => 0,
   "Data::Clean::JSON" => 0,
+  "File::Slurp::Tiny" => 0,
   "File::Spec" => 0,
   "IO::Handle" => 0,
   "IPC::Open3" => 0,
