@@ -39,10 +39,10 @@ my %WriteMakefileArgs = (
     "File::Spec" => 0,
     "IO::Handle" => 0,
     "IPC::Open3" => 0,
-    "Perinci::Examples" => "0.28",
+    "Perinci::Examples" => "0.31",
     "Test::More" => "0.98"
   },
-  "VERSION" => "0.16",
+  "VERSION" => "0.17",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -60,7 +60,7 @@ my %FallbackPrereqs = (
   "IPC::Open3" => 0,
   "JSON" => 0,
   "Mo" => 0,
-  "Perinci::Examples" => "0.28",
+  "Perinci::Examples" => "0.31",
   "Perinci::Object" => 0,
   "Perinci::Sub::Complete" => "0.60",
   "Perinci::Sub::ConvertArgs::Array" => "0.06",

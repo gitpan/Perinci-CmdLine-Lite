@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-08-22'; # DATE
-our $VERSION = '0.16'; # VERSION
+our $DATE = '2014-08-23'; # DATE
+our $VERSION = '0.17'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -510,7 +510,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.16 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-22.
+This document describes version 0.17 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-23.
 
 =head1 SYNOPSIS
 
@@ -602,10 +602,6 @@ something like this:
 
 =item * P::C::Lite does not support I18N
 
-=item * P::C::Lite does not yet support these Rinci function metadata properties
-
- x.perinci.cmdline.default_format
-
 =item * P::C::Lite does not yet support these Rinci function argument specification properties
 
  cmdline_src
@@ -613,7 +609,6 @@ something like this:
 =item * P::C::Lite does not yet support these Rinci result metadata properties/attributes
 
  is_stream
- cmdline.display_result
  cmdline.page_result
  cmdline.pager
 

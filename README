@@ -3,8 +3,8 @@ NAME
     application framework
 
 VERSION
-    This document describes version 0.16 of Perinci::CmdLine::Lite (from
-    Perl distribution Perinci-CmdLine-Lite), released on 2014-08-22.
+    This document describes version 0.17 of Perinci::CmdLine::Lite (from
+    Perl distribution Perinci-CmdLine-Lite), released on 2014-08-23.
 
 SYNOPSIS
     See Perinci::CmdLine::Manual::Examples.
@@ -96,11 +96,6 @@ DESCRIPTION
 
     *   P::C::Lite does not support I18N
 
-    *   P::C::Lite does not yet support these Rinci function metadata
-        properties
-
-         x.perinci.cmdline.default_format
-
     *   P::C::Lite does not yet support these Rinci function argument
         specification properties
 
@@ -110,7 +105,6 @@ DESCRIPTION
         properties/attributes
 
          is_stream
-         cmdline.display_result
          cmdline.page_result
          cmdline.pager
 
