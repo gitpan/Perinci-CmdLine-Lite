@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-08-25'; # DATE
-our $VERSION = '0.21'; # VERSION
+our $DATE = '2014-08-26'; # DATE
+our $VERSION = '0.22'; # VERSION
 
 use 5.010001;
 
@@ -306,9 +306,12 @@ sub parse_argv {
         for my $section (keys %$conf) {
             if (defined $profile) {
                 if (length $scn) {
-                    next unless $section =~ /\A\Q$scn\E\s+\Q$profile\E\z/;
+                    next unless
+                        $section =~ /\A\Q$scn\E\s+\Q$profile\E\z/ # old, deprecated
+                            || $section =~ /\A\Q$scn\E\s+\Qprofile=$profile\E\z/;
                 } else {
-                    next unless $section eq $profile;
+                    next unless $section eq $profile # old, deprecated
+                        || $section eq "profile=$profile";
                 }
             } else {
                 if (length $scn) {
@@ -488,7 +491,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.21 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-25.
+This document describes version 0.22 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-26.
 
 =for Pod::Coverage ^(.+)$
 

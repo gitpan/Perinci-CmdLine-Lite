@@ -18,7 +18,7 @@ Perinci::CmdLine::Manual - Perinci::CmdLine manual
 
 =head1 VERSION
 
-This document describes version 0.21 of Perinci::CmdLine::Manual (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-25.
+This document describes version 0.22 of Perinci::CmdLine::Manual (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-26.
 
 =head1 DESCRIPTION
 
@@ -228,10 +228,10 @@ When executing program (the comments will show what arguments are set):
 Example 2 (with profiles):
 
  ; prog.conf
- [profile1]
+ [profile=profile1]
  foo=1
  bar=2
- [profile2]
+ [profile=profile2]
  foo=10
  bar=20
 
@@ -259,10 +259,10 @@ When executing program:
 Example 4 (with subcommands and profiles):
 
  ; prog.conf
- [subcommand1 profile1]
+ [subcommand1 profile=profile1]
  foo=1
  bar=2
- [subcommand1 profile2]
+ [subcommand1 profile=profile2]
  foo=10
  bar=20
 
