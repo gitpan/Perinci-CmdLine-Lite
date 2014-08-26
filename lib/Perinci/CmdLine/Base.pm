@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
 our $DATE = '2014-08-24'; # DATE
-our $VERSION = '0.18'; # VERSION
+our $VERSION = '0.19'; # VERSION
 
 use 5.010001;
 
@@ -9,20 +9,22 @@ use 5.010001;
 # pericmd-lite, but Mo is more lightweight than Role::Tiny (also R::T doesn't
 # have attributes), Role::Basic, or Moo::Role.
 
-use Mo qw'build default';
+use if  $INC{'Perinci/CmdLine/Lite.pm'}, qw(Mo  build default);
+use if !$INC{'Perinci/CmdLine/Lite.pm'}, qw(Moo);
 
-has actions => ();
-has common_opts => ();
-has completion => ();
-has default_subcommand => ();
+has actions => (is=>'rw');
+has common_opts => (is=>'rw');
+has completion => (is=>'rw');
+has default_subcommand => (is=>'rw');
 has get_subcommand_from_arg => (is=>'rw', default=>1);
-has description => ();
+has description => (is=>'rw');
 has exit => (is=>'rw', default=>1);
-has formats => ();
-has pass_cmdline_object => (default=>0);
-has per_arg_json => ();
-has per_arg_yaml => ();
+has formats => (is=>'rw');
+has pass_cmdline_object => (is=>'rw', default=>0);
+has per_arg_json => (is=>'rw');
+has per_arg_yaml => (is=>'rw');
 has program_name => (
+    is=>'rw',
     default => sub {
         my $pn = $ENV{PERINCI_CMDLINE_PROGRAM_NAME};
         if (!defined($pn)) {
@@ -30,12 +32,12 @@ has program_name => (
         }
         $pn;
     });
-has riap_client => ();
-has riap_client_args => ();
-has subcommands => ();
-has summary => ();
-has tags => ();
-has url => ();
+has riap_client => (is=>'rw');
+has riap_client_args => (is=>'rw');
+has subcommands => (is=>'rw');
+has summary => (is=>'rw');
+has tags => (is=>'rw');
+has url => (is=>'rw');
 
 # role: requires 'get_meta' # ($url)
 
@@ -414,7 +416,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.18 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-24.
+This document describes version 0.19 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-24.
 
 =for Pod::Coverage ^(.+)$
 
