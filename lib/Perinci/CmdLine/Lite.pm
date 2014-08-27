@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-08-26'; # DATE
-our $VERSION = '0.22'; # VERSION
+our $DATE = '2014-08-27'; # DATE
+our $VERSION = '0.23'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -461,6 +461,7 @@ sub run_help {
                      ($as->{greedy} ? "+":"").") " : ""),
                 ($sm->{alias_for} ? $alspec->{summary} // "Alias for $sm->{alias_for}" :
                      $as->{summary} // ''),
+                ($as->{cmdline_src} ? " ($as->{cmdline_src})" : ""),
             );
             my $sch = ($sm->{is_alias} ?
                            $as->{cmdline_aliases}{$sm->{alias}}{schema} : undef) //
@@ -539,7 +540,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.22 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-26.
+This document describes version 0.23 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-27.
 
 =head1 SYNOPSIS
 
@@ -631,10 +632,6 @@ something like this:
 
 =item * P::C::Lite does not support I18N
 
-=item * P::C::Lite does not yet support these Rinci function argument specification properties
-
- cmdline_src
-
 =item * P::C::Lite does not yet support these Rinci result metadata properties/attributes
 
  is_stream
@@ -696,7 +693,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Perinci-Cm
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
+Source repository is at L<https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
 
 =head1 BUGS
 
@@ -708,11 +705,11 @@ feature.
 
 =head1 AUTHOR
 
-Steven Haryanto <stevenharyanto@gmail.com>
+perlancar <perlancar@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Steven Haryanto.
+This software is copyright (c) 2014 by perlancar@cpan.org.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

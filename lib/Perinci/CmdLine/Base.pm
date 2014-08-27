@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-08-26'; # DATE
-our $VERSION = '0.22'; # VERSION
+our $DATE = '2014-08-27'; # DATE
+our $VERSION = '0.23'; # VERSION
 
 use 5.010001;
 
@@ -392,6 +392,88 @@ sub parse_argv {
     }
 }
 
+# parse cmdline_src argument spec properties for filling argument value from
+# file and/or stdin.
+sub parse_cmdline_src {
+    my ($self, $r) = @_;
+
+    my $action = $r->{action};
+    my $meta   = $r->{meta};
+
+    # handle cmdline_src
+    if ($action eq 'call') {
+        my $args_p = $meta->{args} // {};
+        my $stdin_seen;
+        for my $an (sort keys %$args_p) {
+            #$log->tracef("TMP: handle cmdline_src for arg=%s", $an);
+            my $as = $args_p->{$an};
+            my $src = $as->{cmdline_src};
+            if ($src) {
+                die [531,
+                     "Invalid 'cmdline_src' value for argument '$an': $src"]
+                    unless $src =~ /\A(stdin|file|stdin_or_files)\z/;
+                die [531,
+                     "Sorry, argument '$an' is set cmdline_src=$src, but type ".
+                         "is not 'str'/'array', only those are supported now"]
+                    unless $as->{schema}[0] =~ /\A(str|array)\z/;
+                if ($src =~ /stdin/) {
+                    die [531, "Only one argument can be specified ".
+                             "cmdline_src stdin/stdin_or_files"]
+                        if $stdin_seen++;
+                }
+                my $is_ary = $as->{schema}[0] eq 'array';
+                if ($src eq 'stdin' || $src eq 'file' &&
+                        ($r->{args}{$an}//"") eq '-') {
+                    die [400, "Argument $an must be set to '-' which means ".
+                             "from stdin"]
+                        if defined($r->{args}{$an}) &&
+                            $r->{args}{$an} ne '-';
+                    #$log->trace("Getting argument '$an' value from stdin ...");
+                    $r->{args}{$an} = $is_ary ? [<STDIN>] :
+                        do { local $/; <STDIN> };
+                } elsif ($src eq 'stdin_or_files') {
+                    # push back argument value to @ARGV so <> can work to slurp
+                    # all the specified files
+                    local @ARGV = @ARGV;
+                    unshift @ARGV, $r->{args}{$an}
+                        if defined $r->{args}{$an};
+                    #$log->tracef("Getting argument '$an' value from ".
+                    #                 "stdin_or_files, \@ARGV=%s ...", \@ARGV);
+
+                    # perl doesn't seem to check files, so we check it here
+                    for (@ARGV) {
+                        next if $_ eq '-';
+                        die [500, "Can't read file '$_': $!"] if !(-r $_);
+                    }
+
+                    $r->{args}{$an} = $is_ary ? [<>] : do { local $/; <> };
+                } elsif ($src eq 'file') {
+                    unless (exists $r->{args}{$an}) {
+                        if ($as->{req}) {
+                            die [400,
+                                 "Please specify filename for argument '$an'"];
+                        } else {
+                            next;
+                        }
+                    }
+                    die [400, "Please specify filename for argument '$an'"]
+                        unless defined $r->{args}{$an};
+                    #$log->trace("Getting argument '$an' value from ".
+                    #                "file ...");
+                    my $fh;
+                    unless (open $fh, "<", $r->{args}{$an}) {
+                        die [500, "Can't open file '$r->{args}{$an}' ".
+                                 "for argument '$an': $!"];
+                    }
+                    $r->{args}{$an} = $is_ary ? [<$fh>] :
+                        do { local $/; <$fh> };
+                }
+            }
+        }
+    }
+    #$log->tracef("args after cmdline_src is processed: %s", $r->{args});
+}
+
 sub run {
     my ($self) = @_;
 
@@ -426,6 +508,7 @@ sub run {
         $r->{action} //= 'call';
 
         $self->hook_after_parse_argv($r);
+        $self->parse_cmdline_src($r);
         my $missing = $parse_res->[3]{"func.missing_args"};
         die [400, "Missing required argument(s): ".join(", ", @$missing)]
             if $missing && @$missing;
@@ -491,7 +574,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.22 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-26.
+This document describes version 0.23 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-27.
 
 =for Pod::Coverage ^(.+)$
 
@@ -985,7 +1068,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Perinci-Cm
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
+Source repository is at L<https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
 
 =head1 BUGS
 
@@ -997,11 +1080,11 @@ feature.
 
 =head1 AUTHOR
 
-Steven Haryanto <stevenharyanto@gmail.com>
+perlancar <perlancar@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Steven Haryanto.
+This software is copyright (c) 2014 by perlancar@cpan.org.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

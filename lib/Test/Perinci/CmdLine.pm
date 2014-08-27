@@ -1,7 +1,7 @@
 package Test::Perinci::CmdLine;
 
-our $DATE = '2014-08-26'; # DATE
-our $VERSION = '0.22'; # VERSION
+our $DATE = '2014-08-27'; # DATE
+our $VERSION = '0.23'; # VERSION
 
 use 5.010;
 use strict;
@@ -114,7 +114,7 @@ Test::Perinci::CmdLine - Test library for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.22 of Test::Perinci::CmdLine (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-26.
+This document describes version 0.23 of Test::Perinci::CmdLine (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-27.
 
 =head1 FUNCTIONS
 
@@ -128,7 +128,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Perinci-Cm
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
+Source repository is at L<https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
 
 =head1 BUGS
 
@@ -140,11 +140,11 @@ feature.
 
 =head1 AUTHOR
 
-Steven Haryanto <stevenharyanto@gmail.com>
+perlancar <perlancar@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Steven Haryanto.
+This software is copyright (c) 2014 by perlancar@cpan.org.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
