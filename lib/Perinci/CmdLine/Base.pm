@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-08-27'; # DATE
-our $VERSION = '0.23'; # VERSION
+our $DATE = '2014-08-30'; # DATE
+our $VERSION = '0.24'; # VERSION
 
 use 5.010001;
 
@@ -9,8 +9,8 @@ use 5.010001;
 # pericmd-lite, but Mo is more lightweight than Role::Tiny (also R::T doesn't
 # have attributes), Role::Basic, or Moo::Role.
 
-use if  $INC{'Perinci/CmdLine/Lite.pm'}, qw(Mo  build default);
-use if !$INC{'Perinci/CmdLine/Lite.pm'}, qw(Moo);
+use if  $INC{'Perinci/CmdLine.pm'}, qw(Moo);
+use if !$INC{'Perinci/CmdLine.pm'}, qw(Mo  build default);
 
 has actions => (is=>'rw');
 has common_opts => (is=>'rw');
@@ -574,7 +574,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.23 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-27.
+This document describes version 0.24 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-30.
 
 =for Pod::Coverage ^(.+)$
 
