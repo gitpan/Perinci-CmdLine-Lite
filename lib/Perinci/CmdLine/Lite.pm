@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
 our $DATE = '2014-09-03'; # DATE
-our $VERSION = '0.26'; # VERSION
+our $VERSION = '0.27'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -445,8 +445,15 @@ sub run_help {
 sub run_call {
     my ($self, $r) = @_;
 
+    my %extra;
+    if ($r->{send_argv}) {
+        $extra{argv} = $r->{orig_argv};
+    } else {
+        $extra{args} = $r->{args};
+    }
+
     $self->riap_client->request(
-        call => $r->{subcommand_data}{url}, {args=>$r->{args}});
+        call => $r->{subcommand_data}{url}, \%extra);
 }
 
 1;
@@ -464,7 +471,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.26 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-09-03.
+This document describes version 0.27 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-09-03.
 
 =head1 SYNOPSIS
 

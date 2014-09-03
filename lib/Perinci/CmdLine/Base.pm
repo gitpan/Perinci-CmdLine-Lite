@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
 our $DATE = '2014-09-03'; # DATE
-our $VERSION = '0.26'; # VERSION
+our $VERSION = '0.27'; # VERSION
 
 use 5.010001;
 
@@ -503,9 +503,9 @@ sub run {
 
         my $parse_res = $self->parse_argv($r);
         if ($parse_res->[0] == 502) {
-            # we need to send ARGV to the server, because it's impossible to get
-            # args from ARGV (e.g. there's a cmdline_alias with CODE, which has
-            # been transformed into string when crossing network boundary)
+            # we'll need to send ARGV to the server, because it's impossible to
+            # get args from ARGV (e.g. there's a cmdline_alias with CODE, which
+            # has been transformed into string when crossing network boundary)
             $r->{send_argv} = 1;
         } elsif ($parse_res->[0] != 200) {
             die $parse_res;
@@ -583,7 +583,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.26 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-09-03.
+This document describes version 0.27 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-09-03.
 
 =for Pod::Coverage ^(.+)$
 
