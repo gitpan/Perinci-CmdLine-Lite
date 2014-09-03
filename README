@@ -3,8 +3,8 @@ NAME
     application framework
 
 VERSION
-    This document describes version 0.24 of Perinci::CmdLine::Lite (from
-    Perl distribution Perinci-CmdLine-Lite), released on 2014-08-30.
+    This document describes version 0.25 of Perinci::CmdLine::Lite (from
+    Perl distribution Perinci-CmdLine-Lite), released on 2014-09-03.
 
 SYNOPSIS
     See Perinci::CmdLine::Manual::Examples.
@@ -31,8 +31,8 @@ DESCRIPTION
 
     *   P::C::Lite starts much faster
 
-        The target is under 0.05s to make shell tab completion convenient.
-        On the other hand, P::C can start between 0.2-0.5s.
+        The target is under 0.04-0.05s to make shell tab completion
+        convenient. On the other hand, P::C can start between 0.20-0.50s.
 
     *   P::C::Lite uses simpler formatting
 
@@ -67,18 +67,18 @@ DESCRIPTION
         Table is printed using the more lightweight and much faster
         Text::Table::Tiny.
 
-    *   No remote URL support in P::C::Lite
+    *   No support for some protocols
 
-        Instead of using Perinci::Access, P::C::Lite accesses Perl packages
-        on the filesystem directly. This means only code on the filesystem
-        is available. (But I plan to write another subclass P::C::Lite::HTTP
-        that uses HTTP::Tiny or HTTP::Tiny::UNIX for Riap::HTTP support).
+        Instead of Perinci::Access, this module uses the more lightweight
+        alternative Perinci::Access::Lite which does not support some URL
+        schemes (http/https and local are supported though).
 
     *   No automatic validation from schema in P::C::Lite
 
         Since code wrapping and schema code generation done by
         Perinci::Sub::Wrapper and Data::Sah (which are called automatically
-        by Perinci::Access) adds too much startup overhead.
+        by Perinci::Access, but not by Perinci::Access::Lite) adds too much
+        startup overhead.
 
     *   P::C::Lite does not support color themes
 

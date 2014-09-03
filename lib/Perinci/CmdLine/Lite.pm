@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-08-30'; # DATE
-our $VERSION = '0.24'; # VERSION
+our $DATE = '2014-09-03'; # DATE
+our $VERSION = '0.25'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -17,6 +17,11 @@ extends 'Perinci::CmdLine::Base';
 
 sub BUILD {
     my ($self, $args) = @_;
+
+    if (!$self->{riap_client}) {
+        require Perinci::Access::Lite;
+        $self->{riap_client} = Perinci::Access::Lite->new;
+    }
 
     if (!$self->{actions}) {
         $self->{actions} = {
@@ -234,55 +239,11 @@ sub hook_display_result {
 
 sub hook_after_run {}
 
-# copy-pasted from SHARYANTO::Package::Util
-sub __package_exists {
-    no strict 'refs';
-
-    my $pkg = shift;
-
-    return unless $pkg =~ /\A\w+(::\w+)*\z/;
-    if ($pkg =~ s/::(\w+)\z//) {
-        return !!${$pkg . "::"}{$1 . "::"};
-    } else {
-        return !!$::{$pkg . "::"};
-    }
-}
-
-sub __require_url {
-    my ($url) = @_;
-
-    $url =~ m!\A(?:pl:)?/(\w+(?:/\w+)*)/(\w*)\z!
-        or die [500, "Unsupported/bad URL '$url'"];
-    my ($mod, $func) = ($1, $2);
-    # skip if package already exists, e.g. 'main'
-    require "$mod.pm" unless __package_exists($mod);
-    $mod =~ s!/!::!g;
-    ($mod, $func);
-}
-
-sub get_meta {
-    my ($self, $url) = @_;
-
-    my ($mod, $func) = __require_url($url);
-
-    my $meta;
-    {
-        no strict 'refs';
-        if (length $func) {
-            $meta = ${"$mod\::SPEC"}{$func}
-                or die [500, "No metadata for '$url'"];
-        } else {
-            $meta = ${"$mod\::SPEC"}{':package'} // {v=>1.1};
-        }
-        $meta->{entity_v}    //= ${"$mod\::VERSION"};
-        $meta->{entity_date} //= ${"$mod\::DATE"};
-    }
-
-    require Perinci::Sub::Normalize;
-    $meta = Perinci::Sub::Normalize::normalize_function_metadata($meta);
+sub hook_after_get_meta {
+    my ($self, $r) = @_;
 
     require Perinci::Object;
-    if (Perinci::Object::risub($meta)->can_dry_run) {
+    if (Perinci::Object::risub($r->{meta})->can_dry_run) {
         $self->common_opts->{dry_run} = {
             getopt  => 'dry-run',
             summary => "Run in simulation mode (also via DRY_RUN=1)",
@@ -293,8 +254,6 @@ sub get_meta {
             },
         };
     }
-
-    $meta;
 }
 
 sub run_subcommands {
@@ -319,7 +278,7 @@ sub run_subcommands {
 sub run_version {
     my ($self, $r) = @_;
 
-    my $meta = $r->{meta} = $self->get_meta($self->url);
+    my $meta = $r->{meta} = $self->get_meta($r, $self->url);
 
     [200, "OK",
      join("",
@@ -339,7 +298,7 @@ sub run_help {
     my @help;
     my $scn    = $r->{subcommand_name};
     my $scd    = $r->{subcommand_data};
-    my $meta   = $self->get_meta($scd->{url} // $self->{url});
+    my $meta   = $self->get_meta($r, $scd->{url} // $self->{url});
     my $args_p = $meta->{args} // {};
 
     # summary
@@ -486,43 +445,8 @@ sub run_help {
 sub run_call {
     my ($self, $r) = @_;
 
-    my $scd = $r->{subcommand_data};
-    my ($mod, $func) = __require_url($scd->{url});
-
-    # convert args
-    my $aa = $r->{meta}{args_as} // 'hash';
-    my @args;
-    if ($aa =~ /array/) {
-        require Perinci::Sub::ConvertArgs::Array;
-        my $convres = Perinci::Sub::ConvertArgs::Array::convert_args_to_array(
-            args => $r->{args}, meta => $r->{meta},
-        );
-        return $convres unless $convres->[0] == 200;
-        if ($aa =~ /ref/) {
-            @args = ($convres->[2]);
-        } else {
-            @args = @{ $convres->[2] };
-        }
-    } elsif ($aa eq 'hashref') {
-        @args = ({ %{ $r->{args} } });
-    } else {
-        # hash
-        @args = %{ $r->{args} };
-    }
-
-    # call!
-    my $res;
-    {
-        no strict 'refs';
-        $res = &{"$mod\::$func"}(@args);
-    }
-
-    # add envelope
-    if ($r->{meta}{result_naked}) {
-        $res = [200, "OK (envelope added by ".__PACKAGE__.")", $res];
-    }
-
-    $res;
+    $self->riap_client->request(
+        call => $r->{subcommand_data}{url}, {args=>$r->{args}});
 }
 
 1;
@@ -540,7 +464,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.24 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-30.
+This document describes version 0.25 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-09-03.
 
 =head1 SYNOPSIS
 
@@ -570,8 +494,8 @@ Below is summary of the differences between P::C::Lite and P::C:
 
 =item * P::C::Lite starts much faster
 
-The target is under 0.05s to make shell tab completion convenient. On the other
-hand, P::C can start between 0.2-0.5s.
+The target is under 0.04-0.05s to make shell tab completion convenient. On the
+other hand, P::C can start between 0.20-0.50s.
 
 =item * P::C::Lite uses simpler formatting
 
@@ -603,18 +527,17 @@ YAML and the other formats are not supported.
 Table is printed using the more lightweight and much faster
 L<Text::Table::Tiny>.
 
-=item * No remote URL support in P::C::Lite
+=item * No support for some protocols
 
-Instead of using Perinci::Access, P::C::Lite accesses Perl packages on the
-filesystem directly. This means only code on the filesystem is available. (But I
-plan to write another subclass P::C::Lite::HTTP that uses L<HTTP::Tiny> or
-L<HTTP::Tiny::UNIX> for Riap::HTTP support).
+Instead of L<Perinci::Access>, this module uses the more lightweight alternative
+L<Perinci::Access::Lite> which does not support some URL schemes (http/https and
+local are supported though).
 
 =item * No automatic validation from schema in P::C::Lite
 
 Since code wrapping and schema code generation done by L<Perinci::Sub::Wrapper>
-and L<Data::Sah> (which are called automatically by Perinci::Access) adds too
-much startup overhead.
+and L<Data::Sah> (which are called automatically by Perinci::Access, but not by
+Perinci::Access::Lite) adds too much startup overhead.
 
 =item * P::C::Lite does not support color themes
 

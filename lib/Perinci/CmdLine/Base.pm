@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-08-30'; # DATE
-our $VERSION = '0.24'; # VERSION
+our $DATE = '2014-09-03'; # DATE
+our $VERSION = '0.25'; # VERSION
 
 use 5.010001;
 
@@ -48,13 +48,23 @@ has config_dirs => (
     },
 );
 
-# role: requires 'get_meta' # ($url)
-
+# role: requires 'hook_after_get_meta'
 # role: requires 'hook_before_run'
 # role: requires 'hook_after_parse_argv'
 # role: requires 'hook_format_result'
 # role: requires 'hook_display_result'
 # role: requires 'hook_after_run'
+
+sub get_meta {
+    my ($self, $r, $url) = @_;
+
+    my $res = $self->riap_client->request(meta => $url);
+    die $res unless $res->[0] == 200;
+    my $meta = $res->[2];
+    $self->hook_after_get_meta($r);
+    $r->{meta} = $meta;
+    $meta;
+}
 
 sub get_program_and_subcommand_name {
     my ($self, $r) = @_;
@@ -128,7 +138,7 @@ sub do_completion {
     $r->{format} = 'text';
 
     my $scd = $r->{subcommand_data};
-    my $meta = $self->get_meta($scd->{url} // $self->{url});
+    my $meta = $self->get_meta($r, $scd->{url} // $self->{url});
 
     require Perinci::Sub::Complete;
     my $compres = Perinci::Sub::Complete::complete_cli_arg(
@@ -331,8 +341,7 @@ sub parse_argv {
         return [200, "OK (subcommand options parsing skipped)"];
     } else {
         my $scd = $r->{subcommand_data};
-        my $meta = $self->get_meta($scd->{url});
-        $r->{meta} = $meta;
+        my $meta = $self->get_meta($r, $scd->{url});
 
         $r->{format} //= $meta->{'cmdline.default_format'};
 
@@ -574,7 +583,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.24 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-08-30.
+This document describes version 0.25 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-09-03.
 
 =for Pod::Coverage ^(.+)$
 
@@ -970,7 +979,7 @@ Called by run().
 
 Called by run().
 
-=head2 $cmd->get_meta($url) => ENVRES
+=head2 $cmd->get_meta($r, $url) => ENVRES
 
 Called by parse_argv() or do_completion(). Subclass has to implement this.
 
