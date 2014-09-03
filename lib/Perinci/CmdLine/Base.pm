@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
 our $DATE = '2014-09-03'; # DATE
-our $VERSION = '0.25'; # VERSION
+our $VERSION = '0.26'; # VERSION
 
 use 5.010001;
 
@@ -61,8 +61,8 @@ sub get_meta {
     my $res = $self->riap_client->request(meta => $url);
     die $res unless $res->[0] == 200;
     my $meta = $res->[2];
-    $self->hook_after_get_meta($r);
     $r->{meta} = $meta;
+    $self->hook_after_get_meta($r);
     $meta;
 }
 
@@ -583,7 +583,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.25 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-09-03.
+This document describes version 0.26 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-09-03.
 
 =for Pod::Coverage ^(.+)$
 
