@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-09-03'; # DATE
-our $VERSION = '0.27'; # VERSION
+our $DATE = '2014-09-05'; # DATE
+our $VERSION = '0.28'; # VERSION
 
 use 5.010001;
 
@@ -343,8 +343,6 @@ sub parse_argv {
         my $scd = $r->{subcommand_data};
         my $meta = $self->get_meta($r, $scd->{url});
 
-        $r->{format} //= $meta->{'cmdline.default_format'};
-
         if ($scd->{args}) {
             $args{$_} = $scd->{args}{$_} for keys %{ $scd->{args} };
         }
@@ -541,6 +539,7 @@ sub run {
         }
     }
     $r->{format} //= $r->{res}[3]{'cmdline.default_format'};
+    $r->{format} //= $r->{meta}{'cmdline.default_format'};
     if (exists $r->{res}[3]{'cmdline.result'}) {
         $r->{res}[2] = $r->{res}[3]{'cmdline.result'};
     }
@@ -583,7 +582,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.27 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-09-03.
+This document describes version 0.28 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-09-05.
 
 =for Pod::Coverage ^(.+)$
 
@@ -1018,7 +1017,7 @@ result.
 
 This module observes the following Rinci metadata property attributes:
 
-=head2 x.perinci.cmdline.default_format => STR
+=head2 cmdline.default_format => STR
 
 Set default output format (if user does not specify via --format command-line
 option).
