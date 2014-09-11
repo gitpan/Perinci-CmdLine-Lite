@@ -31,7 +31,8 @@ my %WriteMakefileArgs = (
     "Perinci::Object" => 0,
     "Perinci::Sub::Complete" => "0.60",
     "Perinci::Sub::GetArgs::Argv" => "0.46",
-    "Rinci" => "v1.1.41",
+    "Rinci" => "v1.1.53",
+    "Term::ReadKey" => 0,
     "Text::Table::Tiny" => 0
   },
   "TEST_REQUIRES" => {
@@ -40,10 +41,10 @@ my %WriteMakefileArgs = (
     "File::Spec" => 0,
     "IO::Handle" => 0,
     "IPC::Open3" => 0,
-    "Perinci::Examples" => "0.31",
+    "Perinci::Examples" => "0.32",
     "Test::More" => "0.98"
   },
-  "VERSION" => "0.28",
+  "VERSION" => "0.29",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -64,11 +65,12 @@ my %FallbackPrereqs = (
   "JSON" => 0,
   "Mo" => 0,
   "Perinci::Access::Lite" => 0,
-  "Perinci::Examples" => "0.31",
+  "Perinci::Examples" => "0.32",
   "Perinci::Object" => 0,
   "Perinci::Sub::Complete" => "0.60",
   "Perinci::Sub::GetArgs::Argv" => "0.46",
-  "Rinci" => "v1.1.41",
+  "Rinci" => "v1.1.53",
+  "Term::ReadKey" => 0,
   "Test::More" => "0.98",
   "Text::Table::Tiny" => 0
 );

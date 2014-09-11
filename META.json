@@ -40,7 +40,8 @@
             "Perinci::Object" : "0",
             "Perinci::Sub::Complete" : "0.60",
             "Perinci::Sub::GetArgs::Argv" : "0.46",
-            "Rinci" : "v1.1.41",
+            "Rinci" : "v1.1.53",
+            "Term::ReadKey" : "0",
             "Text::Table::Tiny" : "0",
             "perl" : "5.010001"
          }
@@ -52,7 +53,7 @@
             "File::Spec" : "0",
             "IO::Handle" : "0",
             "IPC::Open3" : "0",
-            "Perinci::Examples" : "0.31",
+            "Perinci::Examples" : "0.32",
             "Test::More" : "0.98"
          }
       }
@@ -69,7 +70,7 @@
          "web" : "https://github.com/perlancar/perl-Perinci-CmdLine-Lite"
       }
    },
-   "version" : "0.28",
+   "version" : "0.29",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.018002"

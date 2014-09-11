@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-09-05'; # DATE
-our $VERSION = '0.28'; # VERSION
+our $DATE = '2014-09-11'; # DATE
+our $VERSION = '0.29'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -15,10 +15,20 @@ extends 'Perinci::CmdLine::Base';
 # error message if base class has errors.
 #use parent 'Perinci::CmdLine::Base';
 
+has default_prompt_template => (
+    is=>'rw',
+    default => 'Enter %s: ',
+);
+
 my $formats = [qw/text text-simple text-pretty json json-pretty/];
 
 sub BUILD {
     my ($self, $args) = @_;
+
+    # default doesn't work?
+    if (!$self->{default_prompt_template}) {
+        $self->{default_prompt_template} = 'Enter %s: ';
+    }
 
     if (!$self->{riap_client}) {
         require Perinci::Access::Lite;
@@ -472,7 +482,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.28 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-09-05.
+This document describes version 0.29 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-09-11.
 
 =head1 SYNOPSIS
 
