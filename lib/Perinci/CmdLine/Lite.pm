@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-09-11'; # DATE
-our $VERSION = '0.29'; # VERSION
+our $DATE = '2014-09-16'; # DATE
+our $VERSION = '0.30'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -243,9 +243,19 @@ sub hook_format_result {
     }
 }
 
+sub hook_format_row {
+    my ($self, $r, $row) = @_;
+
+    if (ref($row) eq 'ARRAY') {
+        return join("\t", @$row) . "\n";
+    } else {
+        return ($row // "") . "\n";
+    }
+}
+
 sub hook_display_result {
     my ($self, $r) = @_;
-    print $r->{fres};
+    $self->display_result($r);
 }
 
 sub hook_after_run {}
@@ -450,7 +460,7 @@ sub run_help {
         push @help, "\n" if @opts;
     }
 
-    [200, "OK", join("", @help)];
+    [200, "OK", join("", @help), {"cmdline.skip_format"=>1}];
 }
 
 sub run_call {
@@ -482,7 +492,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.29 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-09-11.
+This document describes version 0.30 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-09-16.
 
 =head1 SYNOPSIS
 
@@ -573,18 +583,11 @@ something like this:
 
 =item * P::C::Lite does not support I18N
 
-=item * P::C::Lite does not yet support these Rinci result metadata properties/attributes
-
- is_stream
- cmdline.page_result
- cmdline.pager
-
 =item * P::C::Lite does not yet support these environment variables
 
  PERINCI_CMDLINE_COLOR_THEME
  PERINCI_CMDLINE_SERVER
  PROGRESS
- PAGER
  COLOR
  UTF8
 
