@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-09-16'; # DATE
-our $VERSION = '0.30'; # VERSION
+our $DATE = '2014-09-17'; # DATE
+our $VERSION = '0.31'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -148,7 +148,25 @@ sub BUILD {
 
 sub hook_before_run {}
 
-sub hook_after_parse_argv {}
+sub hook_after_parse_argv {
+    my ($self, $r) = @_;
+
+    # since unlike Perinci::CmdLine, we don't wrap the function (where the
+    # wrapper assigns default values for arguments), we must do it here
+    # ourselves.
+    my $ass  = $r->{meta}{args} // {};
+    my $args = $r->{args};
+    for (keys %$ass) {
+        next if exists $args->{$_};
+        my $as = $ass->{$_};
+        if (exists $as->{default}) {
+            $args->{$_} = $as->{default};
+        } elsif ($as->{schema} && exists $as->{schema}[1]{default}) {
+            $args->{$_} = $as->{schema}[1]{default};
+        }
+    }
+
+}
 
 sub hook_format_result {
     my ($self, $r) = @_;
@@ -492,7 +510,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.30 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-09-16.
+This document describes version 0.31 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-09-17.
 
 =head1 SYNOPSIS
 

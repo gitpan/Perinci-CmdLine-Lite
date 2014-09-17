@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-09-16'; # DATE
-our $VERSION = '0.30'; # VERSION
+our $DATE = '2014-09-17'; # DATE
+our $VERSION = '0.31'; # VERSION
 
 use 5.010001;
 
@@ -634,6 +634,7 @@ sub run {
     my $err = $@;
     if ($err || !$r->{res}) {
         if ($err) {
+            $err =~ s/\n+$//;
             $err = [500, "Died: $err"] unless ref($err) eq 'ARRAY';
             $r->{res} = $err;
         } else {
@@ -685,7 +686,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.30 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-09-16.
+This document describes version 0.31 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-09-17.
 
 =for Pod::Coverage ^(.+)$
 
