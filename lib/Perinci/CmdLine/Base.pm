@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-09-17'; # DATE
-our $VERSION = '0.31'; # VERSION
+our $DATE = '2014-10-09'; # DATE
+our $VERSION = '0.32'; # VERSION
 
 use 5.010001;
 
@@ -438,6 +438,8 @@ sub parse_cmdline_src {
             #$log->tracef("TMP: handle cmdline_src for arg=%s", $an);
             my $as = $args_p->{$an};
             my $src = $as->{cmdline_src};
+            my $type = $as->{schema}[0]
+                or die "BUG: No schema is defined for arg '$an'";
             if ($src) {
                 die [531,
                      "Invalid 'cmdline_src' value for argument '$an': $src"]
@@ -445,13 +447,13 @@ sub parse_cmdline_src {
                 die [531,
                      "Sorry, argument '$an' is set cmdline_src=$src, but type ".
                          "is not 'str'/'array', only those are supported now"]
-                    unless $as->{schema}[0] =~ /\A(str|array)\z/;
+                    unless $type =~ /\A(str|array)\z/;
                 if ($src =~ /\A(stdin|stdin_or_files)\z/) {
                     die [531, "Only one argument can be specified ".
                              "cmdline_src stdin/stdin_or_files"]
                         if $stdin_seen++;
                 }
-                my $is_ary = $as->{schema}[0] eq 'array';
+                my $is_ary = $type eq 'array';
                 if ($src eq 'stdin_line' && !exists($r->{args}{$an})) {
                     require Perinci::Object;
                     require Term::ReadKey;
@@ -686,7 +688,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.31 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-09-17.
+This document describes version 0.32 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-09.
 
 =for Pod::Coverage ^(.+)$
 
