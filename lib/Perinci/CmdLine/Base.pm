@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-10-09'; # DATE
-our $VERSION = '0.32'; # VERSION
+our $DATE = '2014-10-16'; # DATE
+our $VERSION = '0.33'; # VERSION
 
 use 5.010001;
 
@@ -50,12 +50,15 @@ has config_dirs => (
 
 # role: requires 'hook_after_get_meta'
 # role: requires 'hook_before_run'
+# role: optional 'hook_before_read_config_file'
 # role: requires 'hook_after_parse_argv'
 # role: requires 'hook_format_result'
 # role: requires 'hook_format_row'
 # role: requires 'hook_display_result'
 # role: requires 'hook_after_run'
 # role: requires 'default_prompt_template'
+
+sub hook_before_read_config_file {}
 
 sub get_meta {
     my ($self, $r, $url) = @_;
@@ -312,6 +315,8 @@ sub parse_argv {
 
     # read from configuration
     if ($r->{read_config}) {
+        $self->hook_before_read_config_file($r);
+
         my $conf = $self->_read_config($r);
         my $scn  = $r->{subcommand_name};
         my $profile = $r->{config_profile};
@@ -688,7 +693,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.32 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-09.
+This document describes version 0.33 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-16.
 
 =for Pod::Coverage ^(.+)$
 
@@ -879,7 +884,8 @@ Sometimes you want to add subcommands as common options instead. For example:
      getopt      => 'halt',
      summary     => 'Halt the server',
      handler     => sub {
-         $cmd->{_subcommand_name} = 'shutdown';
+         my ($go, $val, $r) = @_;
+         $r->{subcommand_name} = 'shutdown';
      },
  };
 
