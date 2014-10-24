@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
 our $DATE = '2014-10-24'; # DATE
-our $VERSION = '0.36'; # VERSION
+our $VERSION = '0.37'; # VERSION
 
 use 5.010001;
 
@@ -415,7 +415,8 @@ sub parse_cmdline_src {
     my $action = $r->{action};
     my $meta   = $r->{meta};
 
-    my $is_network = $r->{subcommand_data}{url} =~ m!^(https?|riap[^:]+):!;
+    my $url = $r->{subcommand_data}{url} // $self->{url} // '';
+    my $is_network = $url =~ m!^(https?|riap[^:]+):!;
 
     # handle cmdline_src
     if ($action eq 'call') {
@@ -707,7 +708,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.36 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-24.
+This document describes version 0.37 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-24.
 
 =for Pod::Coverage ^(.+)$
 
