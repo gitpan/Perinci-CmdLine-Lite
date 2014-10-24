@@ -46,7 +46,7 @@ my %WriteMakefileArgs = (
     "Perinci::Examples" => "0.32",
     "Test::More" => "0.98"
   },
-  "VERSION" => "0.35",
+  "VERSION" => "0.36",
   "test" => {
     "TESTS" => "t/*.t"
   }

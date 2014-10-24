@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
 our $DATE = '2014-10-24'; # DATE
-our $VERSION = '0.35'; # VERSION
+our $VERSION = '0.36'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -188,7 +188,8 @@ sub hook_format_result {
             if (my $prev = $res->[3]{prev}) {
                 $fres .= " ($prev->[0]: $prev->[1])";
             }
-            return "$fres\n";
+        } elsif ($res->[3] && $res->[3]{"x.hint.result_binary"}) {
+            return $res->[2];
         } else {
             require Data::Check::Structure;
             my $data = $res->[2];
@@ -514,7 +515,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.35 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-24.
+This document describes version 0.36 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-24.
 
 =head1 SYNOPSIS
 

@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
 our $DATE = '2014-10-24'; # DATE
-our $VERSION = '0.35'; # VERSION
+our $VERSION = '0.36'; # VERSION
 
 use 5.010001;
 
@@ -408,12 +408,14 @@ sub parse_argv {
 }
 
 # parse cmdline_src argument spec properties for filling argument value from
-# file and/or stdin.
+# file and/or stdin. currently does not support argument submetadata.
 sub parse_cmdline_src {
     my ($self, $r) = @_;
 
     my $action = $r->{action};
     my $meta   = $r->{meta};
+
+    my $is_network = $r->{subcommand_data}{url} =~ m!^(https?|riap[^:]+):!;
 
     # handle cmdline_src
     if ($action eq 'call') {
@@ -452,8 +454,8 @@ sub parse_cmdline_src {
                     unless $src =~ /\A(stdin|file|stdin_or_files|stdin_line)\z/;
                 die [531,
                      "Sorry, argument '$an' is set cmdline_src=$src, but type ".
-                         "is not 'str'/'array', only those are supported now"]
-                    unless $type =~ /\A(str|array)\z/;
+                         "is not str/buf/array, only those are supported now"]
+                    unless $type =~ /\A(str|buf|array)\z/;
                 if ($src =~ /\A(stdin|stdin_or_files)\z/) {
                     die [531, "Only one argument can be specified ".
                              "cmdline_src stdin/stdin_or_files"]
@@ -519,7 +521,18 @@ sub parse_cmdline_src {
                         do { local $/; <$fh> };
                 }
             }
-        }
+
+            # encode to base64 if binary and we want to cross network (because
+            # it's usually JSON)
+            if ($is_network && defined($r->{args}{$an}) && $args_p->{schema} &&
+                    $args_p->{schema}[0] eq 'buf' &&
+                        !$r->{args}{"$an:base64"}) {
+                require MIME::Base64;
+                $r->{args}{"$an:base64"} =
+                    MIME::Base64::encode_base64($r->{args}{$an});
+                delete $r->{args}{$an};
+            }
+        } # for arg
     }
     #$log->tracef("args after cmdline_src is processed: %s", $r->{args});
 }
@@ -694,7 +707,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.35 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-24.
+This document describes version 0.36 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-24.
 
 =for Pod::Coverage ^(.+)$
 
