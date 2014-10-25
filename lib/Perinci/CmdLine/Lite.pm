@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-10-24'; # DATE
-our $VERSION = '0.38'; # VERSION
+our $DATE = '2014-10-25'; # DATE
+our $VERSION = '0.39'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -515,7 +515,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.38 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-24.
+This document describes version 0.39 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-25.
 
 =head1 SYNOPSIS
 
@@ -647,6 +647,15 @@ All the environment variables that L<Perinci::CmdLine::Base> supports, plus:
 =over
 
 =back
+
+=head1 RESULT METADATA
+
+All those supported by L<Perinci::CmdLine::Base>, plus:
+
+=head2 x.hint.result_binary => bool
+
+If set to true, then when formatting to C<text> formats, this class won't print
+any newline to keep the data being printed unmodified.
 
 =head1 SEE ALSO
 

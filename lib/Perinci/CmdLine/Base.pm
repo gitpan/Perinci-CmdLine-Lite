@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-10-24'; # DATE
-our $VERSION = '0.38'; # VERSION
+our $DATE = '2014-10-25'; # DATE
+our $VERSION = '0.39'; # VERSION
 
 use 5.010001;
 
@@ -525,9 +525,10 @@ sub parse_cmdline_src {
 
             # encode to base64 if binary and we want to cross network (because
             # it's usually JSON)
-            if ($is_network && defined($r->{args}{$an}) && $args_p->{schema} &&
-                    $args_p->{schema}[0] eq 'buf' &&
-                        !$r->{args}{"$an:base64"}) {
+            if ($self->{riap_version} == 1.2 && $is_network &&
+                    defined($r->{args}{$an}) && $args_p->{schema} &&
+                        $args_p->{schema}[0] eq 'buf' &&
+                            !$r->{args}{"$an:base64"}) {
                 require MIME::Base64;
                 $r->{args}{"$an:base64"} =
                     MIME::Base64::encode_base64($r->{args}{$an});
@@ -708,7 +709,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.38 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-24.
+This document describes version 0.39 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-25.
 
 =for Pod::Coverage ^(.+)$
 
@@ -1162,7 +1163,7 @@ This module observes the following Rinci metadata property attributes:
 Set default output format (if user does not specify via --format command-line
 option).
 
-=head1 RESULT_METADATA
+=head1 RESULT METADATA
 
 This module interprets the following result metadata property/attribute:
 

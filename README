@@ -3,8 +3,8 @@ NAME
     application framework
 
 VERSION
-    This document describes version 0.38 of Perinci::CmdLine::Lite (from
-    Perl distribution Perinci-CmdLine-Lite), released on 2014-10-24.
+    This document describes version 0.39 of Perinci::CmdLine::Lite (from
+    Perl distribution Perinci-CmdLine-Lite), released on 2014-10-25.
 
 SYNOPSIS
     See Perinci::CmdLine::Manual::Examples.
@@ -120,6 +120,13 @@ METHODS
 ENVIRONMENT
     All the environment variables that Perinci::CmdLine::Base supports,
     plus:
+
+RESULT METADATA
+    All those supported by Perinci::CmdLine::Base, plus:
+
+  x.hint.result_binary => bool
+    If set to true, then when formatting to "text" formats, this class won't
+    print any newline to keep the data being printed unmodified.
 
 SEE ALSO
     Perinci::CmdLine, Perinci::CmdLine::Manual
