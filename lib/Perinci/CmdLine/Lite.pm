@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-10-25'; # DATE
-our $VERSION = '0.39'; # VERSION
+our $DATE = '2014-10-28'; # DATE
+our $VERSION = '0.40'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -183,11 +183,12 @@ sub hook_format_result {
         my $is_pretty = $format eq 'text-pretty' ? 1 :
             $format eq 'text-simple' ? 0 : (-t STDOUT);
         no warnings 'uninitialized';
-        if ($res->[0] != 200) {
+        if ($res->[0] !~ /^2/) {
             my $fres = "ERROR $res->[0]: $res->[1]";
             if (my $prev = $res->[3]{prev}) {
                 $fres .= " ($prev->[0]: $prev->[1])";
             }
+            return "$fres\n";
         } elsif ($res->[3] && $res->[3]{"x.hint.result_binary"}) {
             return $res->[2];
         } else {
@@ -515,7 +516,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.39 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-25.
+This document describes version 0.40 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-28.
 
 =head1 SYNOPSIS
 
@@ -669,7 +670,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Perinci-Cm
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
+Source repository is at L<https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
 
 =head1 BUGS
 

@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-10-25'; # DATE
-our $VERSION = '0.39'; # VERSION
+our $DATE = '2014-10-28'; # DATE
+our $VERSION = '0.40'; # VERSION
 
 use 5.010001;
 
@@ -321,6 +321,7 @@ sub parse_argv {
         my $conf = $self->_read_config($r);
         my $scn  = $r->{subcommand_name};
         my $profile = $r->{config_profile};
+        my $found;
         for my $section (keys %$conf) {
             if (defined $profile) {
                 if (length $scn) {
@@ -340,7 +341,11 @@ sub parse_argv {
             }
             $args{$_} = $conf->{$section}{$_}
                 for keys %{ $conf->{$section} };
+            $found++;
             last;
+        }
+        if (defined($profile) && !$found) {
+            return [412, "Profile '$profile' not found in configuration file"];
         }
     }
 
@@ -525,13 +530,13 @@ sub parse_cmdline_src {
 
             # encode to base64 if binary and we want to cross network (because
             # it's usually JSON)
-            if ($self->{riap_version} == 1.2 && $is_network &&
-                    defined($r->{args}{$an}) && $args_p->{schema} &&
-                        $args_p->{schema}[0] eq 'buf' &&
+            if ($self->riap_version == 1.2 && $is_network &&
+                    defined($r->{args}{$an}) && $args_p->{$an}{schema} &&
+                        $args_p->{$an}{schema}[0] eq 'buf' &&
                             !$r->{args}{"$an:base64"}) {
                 require MIME::Base64;
                 $r->{args}{"$an:base64"} =
-                    MIME::Base64::encode_base64($r->{args}{$an});
+                    MIME::Base64::encode_base64($r->{args}{$an}, "");
                 delete $r->{args}{$an};
             }
         } # for arg
@@ -709,7 +714,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.39 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-25.
+This document describes version 0.40 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-28.
 
 =for Pod::Coverage ^(.+)$
 
@@ -1278,7 +1283,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Perinci-Cm
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
+Source repository is at L<https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
 
 =head1 BUGS
 

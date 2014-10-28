@@ -12,6 +12,8 @@ use Test::Perinci::CmdLine qw(test_run);
 
 $Test::Perinci::CmdLine::CLASS = 'Perinci::CmdLine::Lite';
 
+require Perinci::Examples;
+
 subtest 'help action' => sub {
     test_run(
         args      => {url=>'/Perinci/Examples/noop'},
@@ -164,7 +166,7 @@ subtest 'output formats' => sub {
             argv      => [qw/--format=text-pretty hohos/],
             exit_code => 0,
             output_re => qr/\A
-                            \[\s*200,\s*"OK"/x,
+                            \[\s*"?200"?,\s*"OK"/sx,
         );
     }; # text-pretty
 
@@ -226,7 +228,7 @@ subtest 'output formats' => sub {
             argv      => [qw/--format=text-simple hohos/],
             exit_code => 0,
             output_re => qr/\A
-                            \[\s*200,\s*"OK"/x,
+                            \[\s*"?200"?,\s*"OK"/sx,
         );
     }; # text-simple
 };
