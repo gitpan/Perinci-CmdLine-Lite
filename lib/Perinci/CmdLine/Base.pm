@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-10-28'; # DATE
-our $VERSION = '0.40'; # VERSION
+our $DATE = '2014-10-30'; # DATE
+our $VERSION = '0.41'; # VERSION
 
 use 5.010001;
 
@@ -454,6 +454,8 @@ sub parse_cmdline_src {
             my $src = $as->{cmdline_src};
             my $type = $as->{schema}[0]
                 or die "BUG: No schema is defined for arg '$an'";
+            # Riap::HTTP currently does not support streaming input
+            $r->{stream_arg} = $an if $as->{stream} && $url !~ /^https?:/;
             if ($src) {
                 die [531,
                      "Invalid 'cmdline_src' value for argument '$an': $src"]
@@ -487,8 +489,8 @@ sub parse_cmdline_src {
                         if defined($r->{args}{$an}) &&
                             $r->{args}{$an} ne '-';
                     #$log->trace("Getting argument '$an' value from stdin ...");
-                    $r->{args}{$an} = $is_ary ? [<STDIN>] :
-                        do { local $/; <STDIN> };
+                    $r->{args}{$an} = $r->{stream_arg} ?
+                        \*STDIN : $is_ary ? [<STDIN>] : do {local $/;<STDIN>};
                 } elsif ($src eq 'stdin_or_files') {
                     # push back argument value to @ARGV so <> can work to slurp
                     # all the specified files
@@ -504,7 +506,8 @@ sub parse_cmdline_src {
                         die [500, "Can't read file '$_': $!"] if !(-r $_);
                     }
 
-                    $r->{args}{$an} = $is_ary ? [<>] : do { local $/; <> };
+                    $r->{args}{$an} = $r->{stream_arg} ?
+                        \*ARGV : $is_ary ? [<>] : do { local $/; <> };
                 } elsif ($src eq 'file') {
                     unless (exists $r->{args}{$an}) {
                         if ($as->{req}) {
@@ -523,8 +526,8 @@ sub parse_cmdline_src {
                         die [500, "Can't open file '$r->{args}{$an}' ".
                                  "for argument '$an': $!"];
                     }
-                    $r->{args}{$an} = $is_ary ? [<$fh>] :
-                        do { local $/; <$fh> };
+                    $r->{args}{$an} = $r->{stream_arg} ?
+                        $fh : $is_ary ? [<$fh>] : do { local $/; <$fh> };
                 }
             }
 
@@ -583,14 +586,11 @@ sub display_result {
     my $handle = $r->{output_handle};
 
     use experimental 'smartmatch';
-    if ($resmeta->{is_stream}) {
-        die [500, "Can't format stream as " . $self->format .
-                 ", please use --format text"]
-            unless $self->format =~ /^text/;
+    if ($resmeta->{stream}) {
         my $x = $res->[2];
         if (ref($x) eq 'GLOB') {
             while (!eof($x)) {
-                print $handle ~~<$x>;
+                while(<$x>) { print $handle $_ }
             }
         } elsif (blessed($x) && $x->can('getline') && $x->can('eof')) {
             # IO::Handle-like object
@@ -623,6 +623,7 @@ sub run {
     }
 
     if ($self->read_config) {
+        # note that we have read the config
         $r->{read_config} = 1;
     }
 
@@ -677,6 +678,8 @@ sub run {
   FORMAT:
     if ($r->{res}[3]{'cmdline.skip_format'}) {
         $r->{fres} = $r->{res}[2];
+    } elsif ($r->{res}[3]{stream}) {
+        # stream will be formatted as displayed by display_result()
     } else {
         $r->{fres} = $self->hook_format_result($r) // '';
     }
@@ -714,7 +717,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.40 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-28.
+This document describes version 0.41 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-30.
 
 =for Pod::Coverage ^(.+)$
 
@@ -793,6 +796,10 @@ Result from C<hook_format_result()>.
 
 Set by select_output_handle() to choose output handle. Normally it's STDOUT but
 can also be pipe to pager (if paging is turned on).
+
+=item * stream_arg => str
+
+If we are doing streaming argument, this will be set to the argument name.
 
 =back
 
@@ -1171,41 +1178,6 @@ option).
 =head1 RESULT METADATA
 
 This module interprets the following result metadata property/attribute:
-
-=head2 property: is_stream => BOOL
-
-XXX should perhaps be defined as standard in L<Rinci::function>.
-
-If set to 1, signify that result is a stream. Result must be a glob, or an
-object that responds to getline() and eof() (like a Perl L<IO::Handle> object),
-or an array/tied array. Format must currently be C<text> (streaming YAML might
-be supported in the future). Items of result will be displayed to output as soon
-as it is retrieved, and unlike non-streams, it can be infinite.
-
-An example function:
-
- $SPEC{cat_file} = { ... };
- sub cat_file {
-     my %args = @_;
-     open my($fh), "<", $args{path} or return [500, "Can't open file: $!"];
-     [200, "OK", $fh, {is_stream=>1}];
- }
-
-another example:
-
- use Tie::Simple;
- $SPEC{uc_file} = { ... };
- sub uc_file {
-     my %args = @_;
-     open my($fh), "<", $args{path} or return [500, "Can't open file: $!"];
-     my @ary;
-     tie @ary, "Tie::Simple", undef,
-         SHIFT     => sub { eof($fh) ? undef : uc(~~<$fh> // "") },
-         FETCHSIZE => sub { eof($fh) ? 0 : 1 };
-     [200, "OK", \@ary, {is_stream=>1}];
- }
-
-See also L<Data::Unixish> and L<App::dux> which deals with streams.
 
 =head2 attribute: cmdline.exit_code => int
 

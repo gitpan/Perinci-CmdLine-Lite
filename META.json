@@ -41,7 +41,7 @@
             "Perinci::Object" : "0",
             "Perinci::Sub::Complete" : "0.60",
             "Perinci::Sub::GetArgs::Argv" : "0.55",
-            "Rinci" : "v1.1.55",
+            "Rinci" : "v1.1.69",
             "Term::ReadKey" : "0",
             "Text::Table::Tiny" : "0",
             "experimental" : "0",
@@ -72,7 +72,7 @@
          "web" : "https://github.com/perlancar/perl-Perinci-CmdLine-Lite"
       }
    },
-   "version" : "0.40",
+   "version" : "0.41",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.018002"
@@ -316,7 +316,7 @@
          {
             "class" : "Dist::Zilla::Plugin::Rinci::Validate",
             "name" : "@Author::PERLANCAR/Rinci::Validate",
-            "version" : "0.18"
+            "version" : "0.19"
          },
          {
             "class" : "Dist::Zilla::Plugin::SetScriptShebang",
