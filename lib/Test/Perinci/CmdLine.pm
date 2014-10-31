@@ -1,7 +1,7 @@
 package Test::Perinci::CmdLine;
 
-our $DATE = '2014-10-30'; # DATE
-our $VERSION = '0.41'; # VERSION
+our $DATE = '2014-10-31'; # DATE
+our $VERSION = '0.42'; # VERSION
 
 use 5.010;
 use strict;
@@ -114,7 +114,7 @@ Test::Perinci::CmdLine - Test library for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.41 of Test::Perinci::CmdLine (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-30.
+This document describes version 0.42 of Test::Perinci::CmdLine (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-31.
 
 =head1 FUNCTIONS
 
