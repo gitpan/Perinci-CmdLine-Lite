@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
 our $DATE = '2014-11-07'; # DATE
-our $VERSION = '0.43'; # VERSION
+our $VERSION = '0.44'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -441,7 +441,7 @@ sub run_help {
         my $has_sc_no_sc = $self->subcommands && !length($r->{subcommand_name});
 
         push @help, "  $cmdname --help (or -h, -?)\n";
-        push @help, "  $cmdname --verbose (or -v)\n";
+        push @help, "  $cmdname --version (or -v)\n";
         push @help, "  $cmdname --subcommands\n" if $has_sc_no_sc;
 
         unless ($has_sc_no_sc) {
@@ -607,7 +607,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.43 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-07.
+This document describes version 0.44 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-07.
 
 =head1 SYNOPSIS
 
