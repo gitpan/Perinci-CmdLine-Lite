@@ -3,8 +3,8 @@ NAME
     application framework
 
 VERSION
-    This document describes version 0.42 of Perinci::CmdLine::Lite (from
-    Perl distribution Perinci-CmdLine-Lite), released on 2014-10-31.
+    This document describes version 0.43 of Perinci::CmdLine::Lite (from
+    Perl distribution Perinci-CmdLine-Lite), released on 2014-11-07.
 
 SYNOPSIS
     See Perinci::CmdLine::Manual::Examples.
@@ -22,6 +22,9 @@ DESCRIPTION
     Perinci::Access for metadata access, Data::Sah for validator generation,
     Text::ANSITable for formatting results, and Log::Any::App (which uses
     Log::Log4perl) for logging.
+
+    P::C::Lite attributes default to condition of low startup overhead. For
+    example, "log" is by default off instead of on like in P::C.
 
     I first developed P::C::Lite mainly for CLI applications that utilize
     shell tab completion as their main feature, e.g. App::PMUtils,
@@ -84,13 +87,10 @@ DESCRIPTION
 
     *   P::C::Lite does not support undo
 
-    *   P::C::Lite does not currently support logging
+    *   P::C::Lite currently has simpler logging
 
-        Something more lightweight than Log::Any::App will be considered.
-        But for now, if you want to view logging and your function uses
-        Log::Any, you can do something like this:
-
-         % DEBUG=1 PERL5OPT=-MLog::Any::App app.pl
+        Only logging to screen is supported, using
+        Log::Any::Adapter::ScreenColoredLevel.
 
     *   P::C::Lite does not support progress indicator
 
@@ -104,8 +104,6 @@ DESCRIPTION
          COLOR
          UTF8
 
-         DEBUG, VERBOSE, QUIET, TRACE, and so on
-
     *   In passing command-line object to functions, P::C::Lite object is
         passed
 
@@ -114,12 +112,41 @@ DESCRIPTION
 ATTRIBUTES
     All the attributes of Perinci::CmdLine::Base, plus:
 
+  log => bool (default: 0, or from env)
+    Whether to enable logging. This currently means setting up
+    Log::Any::Adapter to display logging (set in "hook_after_parse_argv", so
+    tab completion skips this step). To produce log, you use Log::Any in
+    your code.
+
+    The default is off. If you set LOG=1 or LOG_LEVEL or
+    TRACE/DEBUG/VERBOSE/QUIET, then the default will be on. It defaults to
+    off if you set LOG=0 or LOG_LEVEL=off.
+
+  log_level => str (default: warning, or from env)
+    Set default log level. The default can also be set via
+    LOG_LEVEL/TRACE/DEBUG/VERBOSE/QUIET.
+
 METHODS
     All the methods of Perinci::CmdLine::Base, plus:
 
 ENVIRONMENT
     All the environment variables that Perinci::CmdLine::Base supports,
     plus:
+
+  DEBUG
+    Set log level to 'debug'.
+
+  VERBOSE
+    Set log level to 'info'.
+
+  QUIET
+    Set log level to 'error'.
+
+  TRACE
+    Set log level to 'trace'.
+
+  LOG_LEVEL
+    Set log level.
 
 RESULT METADATA
     All those supported by Perinci::CmdLine::Base, plus:

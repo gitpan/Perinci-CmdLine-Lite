@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-10-31'; # DATE
-our $VERSION = '0.42'; # VERSION
+our $DATE = '2014-11-07'; # DATE
+our $VERSION = '0.43'; # VERSION
 
 use 5.010001;
 
@@ -178,7 +178,12 @@ sub do_completion {
             return undef;
         },
     );
-    [200, "OK", Complete::Bash::format_completion($compres)];
+    [200, "OK", Complete::Bash::format_completion($compres),
+     # these extra result are for debugging
+     {
+         "func.words" => $words,
+         "func.cword" => $cword,
+     }];
 }
 
 sub _read_config {
@@ -717,7 +722,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.42 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-10-31.
+This document describes version 0.43 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-07.
 
 =for Pod::Coverage ^(.+)$
 

@@ -27,6 +27,8 @@ my %WriteMakefileArgs = (
     "Data::Clean::JSON" => 0,
     "File::Which" => 0,
     "JSON" => 0,
+    "Log::Any::Adapter" => 0,
+    "Log::Any::Adapter::ScreenColoredLevel" => 0,
     "Mo" => 0,
     "Perinci::Access::Lite" => 0,
     "Perinci::Object" => 0,
@@ -46,7 +48,7 @@ my %WriteMakefileArgs = (
     "Perinci::Examples" => "0.32",
     "Test::More" => "0.98"
   },
-  "VERSION" => "0.42",
+  "VERSION" => "0.43",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -66,6 +68,8 @@ my %FallbackPrereqs = (
   "IO::Handle" => 0,
   "IPC::Open3" => 0,
   "JSON" => 0,
+  "Log::Any::Adapter" => 0,
+  "Log::Any::Adapter::ScreenColoredLevel" => 0,
   "Mo" => 0,
   "Perinci::Access::Lite" => 0,
   "Perinci::Examples" => "0.32",
