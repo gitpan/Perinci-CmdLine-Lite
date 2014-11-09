@@ -74,7 +74,7 @@
          "web" : "https://github.com/sharyanto/perl-Perinci-CmdLine-Lite"
       }
    },
-   "version" : "0.45",
+   "version" : "0.46",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.018002"
@@ -268,6 +268,11 @@
                         "class" : "Pod::Weaver::Section::Region",
                         "name" : "@Author::PERLANCAR/postlude",
                         "version" : "4.006"
+                     },
+                     {
+                        "class" : "Pod::Weaver::Section::BashCompletion::PerinciCmdLine",
+                        "name" : "@Author::PERLANCAR/BashCompletion::PerinciCmdLine",
+                        "version" : "0.02"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Homepage::DefaultCPAN",
