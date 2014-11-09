@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-11-07'; # DATE
-our $VERSION = '0.44'; # VERSION
+our $DATE = '2014-11-08'; # DATE
+our $VERSION = '0.45'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -244,6 +244,7 @@ sub hook_after_parse_argv {
         Log::Any::Adapter->set(
             'ScreenColoredLevel',
             min_level => $r->{log_level} // $self->log_level,
+            formatter => sub { $self->program_name . ": $_[1]" },
         );
     }
 }
@@ -607,7 +608,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.44 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-07.
+This document describes version 0.45 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-08.
 
 =head1 SYNOPSIS
 
@@ -782,7 +783,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Perinci-Cm
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
+Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
 
 =head1 BUGS
 
