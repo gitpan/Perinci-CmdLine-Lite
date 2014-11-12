@@ -43,7 +43,7 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Perinci-CmdLine-Lite
   homepage: https://metacpan.org/release/Perinci-CmdLine-Lite
   repository: git://github.com/sharyanto/perl-Perinci-CmdLine-Lite.git
-version: '0.47'
+version: '0.48'
 x_Dist_Zilla:
   perl:
     version: '5.018001'
@@ -130,7 +130,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::Rinci::InstallCompletion
       name: '@Author::PERLANCAR/Rinci::InstallCompletion'
-      version: '0.01'
+      version: '0.02'
     -
       class: Dist::Zilla::Plugin::OurDate
       name: '@Author::PERLANCAR/OurDate'

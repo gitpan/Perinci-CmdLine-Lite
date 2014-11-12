@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
 our $DATE = '2014-11-12'; # DATE
-our $VERSION = '0.47'; # VERSION
+our $VERSION = '0.48'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -260,7 +260,7 @@ sub hook_format_result {
         my $is_pretty = $format eq 'text-pretty' ? 1 :
             $format eq 'text-simple' ? 0 : (-t STDOUT);
         no warnings 'uninitialized';
-        if ($res->[0] !~ /^2/) {
+        if ($res->[0] !~ /^(2|304)/) {
             my $fres = "ERROR $res->[0]: $res->[1]";
             if (my $prev = $res->[3]{prev}) {
                 $fres .= " ($prev->[0]: $prev->[1])";
@@ -608,7 +608,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.47 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-12.
+This document describes version 0.48 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-12.
 
 =head1 SYNOPSIS
 
