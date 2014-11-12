@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-11-09'; # DATE
-our $VERSION = '0.46'; # VERSION
+our $DATE = '2014-11-12'; # DATE
+our $VERSION = '0.47'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -335,12 +335,12 @@ sub hook_format_result {
     $cleanser->clean_in_place($res);
     state $json = do {
         require JSON;
-        JSON->new->allow_nonref;
+        JSON->new->canonical(1)->allow_nonref;
     };
     if ($format eq 'json') {
         return $json->encode($res) . "\n";
     } else {
-        return $json->pretty->encode($res);
+        return $json->canonical(1)->pretty->encode($res);
     }
 }
 
@@ -608,7 +608,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.46 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-09.
+This document describes version 0.47 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-12.
 
 =head1 SYNOPSIS
 
