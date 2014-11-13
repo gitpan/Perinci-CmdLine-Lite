@@ -725,6 +725,23 @@ _
         argv => [qw/--config-profile=bar/],
         output_re => qr/^$/,
     );
+    {
+        test_run(
+            name => 'unknown config profile but set ignore_missing_config_profile_section -> ok',
+            hook_before_read_config_file => sub {
+                my ($self, $r) = @_;
+                $r->{ignore_missing_config_profile_section} = 1;
+            },
+            args => {
+                url=>'/Perinci/Examples/noop',
+                program_name=>'prog',
+                read_config=>1,
+                config_dirs=>[$dir],
+            },
+            argv => [qw/--config-profile=bar/],
+            output_re => qr/^$/,
+        );
+    }
     test_run(
         name => 'subcommand',
         args => {
@@ -750,6 +767,22 @@ _
         },
         argv => [qw/--config-profile=profile1 subcommand1/],
         output_re => qr/121/,
+    );
+
+    write_file("$dir/sum.conf", <<'_');
+array=0
+_
+    test_run(
+        name => 'array-ify if argument is array',
+        args => {
+            url=>'/Perinci/Examples/sum',
+            program_name=>'sum',
+            read_config=>1,
+            config_dirs=>[$dir],
+        },
+        argv => [qw//],
+        exit_code => 0,
+        output_re => qr/^0$/,
     );
 };
 

@@ -1,11 +1,12 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-11-12'; # DATE
-our $VERSION = '0.48'; # VERSION
+our $DATE = '2014-11-13'; # DATE
+our $VERSION = '0.49'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
 # use warnings; # already enabled by Mo
+use Log::Any '$log';
 
 use Mo qw(build default);
 #use Moo;
@@ -608,7 +609,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.48 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-12.
+This document describes version 0.49 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-13.
 
 =head1 SYNOPSIS
 
@@ -783,7 +784,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Perinci-Cm
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
+Source repository is at L<https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
 
 =head1 BUGS
 

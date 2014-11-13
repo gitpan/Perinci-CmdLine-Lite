@@ -1,9 +1,10 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-11-12'; # DATE
-our $VERSION = '0.48'; # VERSION
+our $DATE = '2014-11-13'; # DATE
+our $VERSION = '0.49'; # VERSION
 
 use 5.010001;
+use Log::Any '$log';
 
 # this class can actually be a role instead of base class for pericmd &
 # pericmd-lite, but Mo is more lightweight than Role::Tiny (also R::T doesn't
@@ -320,43 +321,6 @@ sub parse_argv {
 
     my %args;
 
-    # read from configuration
-    if ($r->{read_config}) {
-        $self->hook_before_read_config_file($r);
-
-        my $conf = $self->_read_config($r);
-        my $scn  = $r->{subcommand_name};
-        my $profile = $r->{config_profile};
-        my $found;
-        for my $section (keys %$conf) {
-            if (defined $profile) {
-                if (length $scn) {
-                    next unless
-                        $section =~ /\A\Q$scn\E\s+\Q$profile\E\z/ # old, deprecated
-                            || $section =~ /\A\Q$scn\E\s+\Qprofile=$profile\E\z/;
-                } else {
-                    next unless $section eq $profile # old, deprecated
-                        || $section eq "profile=$profile";
-                }
-            } else {
-                if (length $scn) {
-                    next unless $section eq $scn;
-                } else {
-                    next unless $section eq 'GLOBAL';
-                }
-            }
-            $args{$_} = $conf->{$section}{$_}
-                for keys %{ $conf->{$section} };
-            $found++;
-            last;
-        }
-        if (defined($profile) && !$found &&
-                defined($r->{read_config_file}) &&
-                    ($r->{ignore_missing_config_profile_section} // 1)) {
-            return [412, "Profile '$profile' not found in configuration file"];
-        }
-    }
-
     # parse argv for per-subcommand command-line opts
     if ($r->{skip_parse_subcommand_argv}) {
         return [200, "OK (subcommand options parsing skipped)"];
@@ -364,9 +328,63 @@ sub parse_argv {
         my $scd = $r->{subcommand_data};
         my $meta = $self->get_meta($r, $scd->{url});
 
+        # first fill in from subcommand specification
         if ($scd->{args}) {
             $args{$_} = $scd->{args}{$_} for keys %{ $scd->{args} };
         }
+
+        # then read from configuration
+        if ($r->{read_config}) {
+            $self->hook_before_read_config_file($r);
+
+            my $conf = $self->_read_config($r);
+            my $scn  = $r->{subcommand_name};
+            my $profile = $r->{config_profile};
+            my $found;
+            for my $section (keys %$conf) {
+                if (defined $profile) {
+                    if (length $scn) {
+                        next unless
+                            $section =~ /\A\Q$scn\E\s+\Q$profile\E\z/ # old, deprecated
+                                || $section =~ /\A\Q$scn\E\s+\Qprofile=$profile\E\z/;
+                    } else {
+                        next unless $section eq $profile # old, deprecated
+                            || $section eq "profile=$profile";
+                    }
+                } else {
+                    if (length $scn) {
+                        next unless $section eq $scn;
+                    } else {
+                        next unless $section eq 'GLOBAL';
+                    }
+                }
+                my $as = $meta->{args} // {};
+                for my $k (keys %{ $conf->{$section} }) {
+                    my $v = $conf->{$section}{$k};
+                    # since IOD might return a scalar or an array (depending on
+                    # whether there is a single param=val or multiple param=
+                    # lines), we need to arrayify the value if the argument is
+                    # expected to be an array.
+                    if (ref($v) ne 'ARRAY' && $as->{$k} && $as->{$k}{schema} &&
+                            $as->{$k}{schema}[0] eq 'array') {
+                        $args{$k} = [$v];
+                    } else {
+                        $args{$k} = $v;
+                    }
+                }
+                $log->tracef("args after reading config: %s", \%args);
+                $found++;
+                last;
+            }
+            if (defined($profile) && !$found &&
+                    defined($r->{read_config_file}) &&
+                        !$r->{ignore_missing_config_profile_section}) {
+                return [412,
+                        "Profile '$profile' not found in configuration file"];
+            }
+        }
+
+        # finally get from argv
 
         # since get_args_from_argv() doesn't pass $r, we need to wrap it
         my $copts = $self->common_opts;
@@ -731,7 +749,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.48 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-12.
+This document describes version 0.49 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-13.
 
 =for Pod::Coverage ^(.+)$
 
@@ -1316,7 +1334,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Perinci-Cm
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
+Source repository is at L<https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
 
 =head1 BUGS
 

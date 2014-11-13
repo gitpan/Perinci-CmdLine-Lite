@@ -1,7 +1,7 @@
 package Test::Perinci::CmdLine;
 
-our $DATE = '2014-11-12'; # DATE
-our $VERSION = '0.48'; # VERSION
+our $DATE = '2014-11-13'; # DATE
+our $VERSION = '0.49'; # VERSION
 
 use 5.010;
 use strict;
@@ -19,25 +19,37 @@ our $CLASS = "Perinci::CmdLine";
 sub test_run {
     my %args = @_;
 
-    my %cmdargs = %{$args{args}};
-    $cmdargs{exit} = 0;
-    $cmdargs{read_config} //= 0;
-    my $cmd = $CLASS->new(%cmdargs);
-
-    local @ARGV = @{$args{argv} // []};
-    my ($stdout, $stderr);
-    my $res;
-    eval {
-        ($stdout, $stderr) = capture {
-            $res = $cmd->run;
-        };
-    };
-    my $eval_err = $@;
-    my $exit_code = $res->[3]{'x.perinci.cmdline.base.exit_code'};
-
     my $name = "test_run: " . ($args{name} // join(" ", @{$args{argv} // []}));
 
     subtest $name => sub {
+        no strict 'refs';
+        no warnings 'redefine';
+
+        local *{"$CLASS\::hook_after_get_meta"}          = $args{hook_after_get_meta}          if $args{hook_after_get_meta};
+        local *{"$CLASS\::hook_before_run"}              = $args{hook_before_run}              if $args{hook_before_run};
+        local *{"$CLASS\::hook_before_read_config_file"} = $args{hook_before_read_config_file} if $args{hook_before_read_config_file};
+        local *{"$CLASS\::hook_after_parse_argv"}        = $args{hook_after_parse_argv}        if $args{hook_after_parse_argv};
+        local *{"$CLASS\::hook_format_result"}           = $args{hook_format_result}           if $args{hook_format_result};
+        local *{"$CLASS\::hook_format_row"}              = $args{hook_format_row}              if $args{hook_format_row};
+        local *{"$CLASS\::hook_display_result"}          = $args{hook_display_result}          if $args{hook_display_result};
+        local *{"$CLASS\::hook_after_run"}               = $args{hook_after_run}               if $args{hook_after_run};
+
+        my %cmdargs = %{$args{args}};
+        $cmdargs{exit} = 0;
+        $cmdargs{read_config} //= 0;
+        my $cmd = $CLASS->new(%cmdargs);
+
+        local @ARGV = @{$args{argv} // []};
+        my ($stdout, $stderr);
+        my $res;
+        eval {
+            ($stdout, $stderr) = capture {
+                $res = $cmd->run;
+            };
+        };
+        my $eval_err = $@;
+        my $exit_code = $res->[3]{'x.perinci.cmdline.base.exit_code'};
+
         if ($args{dies}) {
             ok($eval_err || ref($eval_err), "dies");
             return;
@@ -114,7 +126,7 @@ Test::Perinci::CmdLine - Test library for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.48 of Test::Perinci::CmdLine (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-12.
+This document describes version 0.49 of Test::Perinci::CmdLine (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-13.
 
 =head1 FUNCTIONS
 
@@ -128,7 +140,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Perinci-Cm
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
+Source repository is at L<https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
 
 =head1 BUGS
 
