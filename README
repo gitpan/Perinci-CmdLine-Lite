@@ -3,7 +3,7 @@ NAME
     application framework
 
 VERSION
-    This document describes version 0.50 of Perinci::CmdLine::Lite (from
+    This document describes version 0.51 of Perinci::CmdLine::Lite (from
     Perl distribution Perinci-CmdLine-Lite), released on 2014-11-20.
 
 SYNOPSIS
@@ -166,7 +166,7 @@ HOMEPAGE
 
 SOURCE
     Source repository is at
-    <https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
+    <https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
 
 BUGS
     Please report any bugs or feature requests on the bugtracker website
