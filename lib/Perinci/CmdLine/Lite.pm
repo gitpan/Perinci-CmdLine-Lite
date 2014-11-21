@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-11-20'; # DATE
-our $VERSION = '0.51'; # VERSION
+our $DATE = '2014-11-21'; # DATE
+our $VERSION = '0.52'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -153,7 +153,7 @@ sub BUILD {
                 },
             };
             $co->{no_config} = {
-                getopt  => 'noconfig|no-config',
+                getopt  => 'no-config',
                 summary => 'Do not use any configuration file',
                 handler => sub {
                     my ($go, $val, $r) = @_;
@@ -571,7 +571,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.51 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-20.
+This document describes version 0.52 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-21.
 
 =head1 SYNOPSIS
 
