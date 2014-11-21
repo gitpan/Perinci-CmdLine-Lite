@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
 our $DATE = '2014-11-21'; # DATE
-our $VERSION = '0.52'; # VERSION
+our $VERSION = '0.53'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -516,6 +516,7 @@ sub run_help {
                 my $show_default = exists($ospec->{default}) &&
                     !$is_bool && !$ospec->{is_base64} &&
                         !$ospec->{is_json} && !$ospec->{is_yaml};
+
                 my $add_sum = '';
                 if ($ospec->{is_base64}) {
                     $add_sum = " (base64-encoded)";
@@ -524,11 +525,29 @@ sub run_help {
                 } elsif ($ospec->{is_yaml}) {
                     $add_sum = " (YAML-encoded)";
                 }
+
+                my $argv = '';
+                if (!$ospec->{main_opt} && defined($ospec->{pos})) {
+                    if ($ospec->{greedy}) {
+                        $argv = " (=argv[$ospec->{pos}-])";
+                    } else {
+                        $argv = " (=argv[$ospec->{pos}])";
+                    }
+                }
+
+                my $cmdline_src = '';
+                if (!$ospec->{main_opt} && defined($arg_spec->{cmdline_src})) {
+                    $cmdline_src = " (or from $arg_spec->{cmdline_src})";
+                    $cmdline_src =~ s!_or_!/!g;
+                }
+
                 push @help, sprintf(
-                    "  %-${len}s  %s%s%s\n",
+                    "  %-${len}s  %s%s%s%s%s\n",
                     $opt,
                     $ospec->{summary}//'',
                     $add_sum,
+                    $argv,
+                    $cmdline_src,
                     ($show_default ?
                          " [".Data::Dmp::dmp($ospec->{default})."]":""),
 
@@ -571,7 +590,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.52 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-21.
+This document describes version 0.53 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-21.
 
 =head1 SYNOPSIS
 
