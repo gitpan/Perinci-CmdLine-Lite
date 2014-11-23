@@ -18,7 +18,7 @@ Perinci::CmdLine::Manual - Perinci::CmdLine manual
 
 =head1 VERSION
 
-This document describes version 0.54 of Perinci::CmdLine::Manual (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-23.
+This document describes version 0.55 of Perinci::CmdLine::Manual (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-23.
 
 =head1 DESCRIPTION
 
@@ -386,6 +386,8 @@ For more examples on argument submetadata, see L<Perinci::Examples::SubMeta>.
 =head2 bash
 
 =head2 tcsh
+
+=head2 zsh
 
 =head1 PROGRESS INDICATOR [P::C]
 

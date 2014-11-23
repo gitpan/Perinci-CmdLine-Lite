@@ -47,7 +47,7 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Perinci-CmdLine-Lite
   homepage: https://metacpan.org/release/Perinci-CmdLine-Lite
   repository: git://github.com/sharyanto/perl-Perinci-CmdLine-Lite.git
-version: '0.54'
+version: '0.55'
 x_Dist_Zilla:
   perl:
     version: '5.018002'
@@ -204,13 +204,13 @@ x_Dist_Zilla:
               name: '@Author::PERLANCAR/postlude'
               version: '4.006'
             -
-              class: Pod::Weaver::Section::BashCompletion::GetoptLongComplete
-              name: '@Author::PERLANCAR/BashCompletion::GetoptLongComplete'
-              version: '0.01'
+              class: Pod::Weaver::Section::Completion::GetoptLongComplete
+              name: '@Author::PERLANCAR/Completion::GetoptLongComplete'
+              version: '0.02'
             -
-              class: Pod::Weaver::Section::BashCompletion::PerinciCmdLine
-              name: '@Author::PERLANCAR/BashCompletion::PerinciCmdLine'
-              version: '0.03'
+              class: Pod::Weaver::Section::Completion::PerinciCmdLine
+              name: '@Author::PERLANCAR/Completion::PerinciCmdLine'
+              version: '0.04'
             -
               class: Pod::Weaver::Section::Homepage::DefaultCPAN
               name: '@Author::PERLANCAR/Homepage::DefaultCPAN'
