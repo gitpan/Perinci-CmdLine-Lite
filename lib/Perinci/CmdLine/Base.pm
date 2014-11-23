@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-11-21'; # DATE
-our $VERSION = '0.53'; # VERSION
+our $DATE = '2014-11-23'; # DATE
+our $VERSION = '0.54'; # VERSION
 
 use 5.010001;
 use Log::Any '$log';
@@ -120,14 +120,32 @@ sub status2exitcode {
     $status - 300;
 }
 
-sub do_completion {
-    require Complete::Bash;
+sub _detect_completion {
+    my ($self, $r) = @_;
+    if ($ENV{COMP_LINE}) {
+        $r->{shell} = 'bash';
+        return 1;
+    } elsif ($ENV{COMMAND_LINE}) {
+        $r->{shell} = 'tcsh';
+        return 1;
+    }
+    0;
+}
 
+sub do_completion {
     my ($self, $r) = @_;
 
     local $r->{in_completion} = 1;
 
-    my ($words, $cword) = @{ Complete::Bash::parse_cmdline(undef, undef, '=') };
+    my ($words, $cword);
+    if ($r->{shell} eq 'bash') {
+        require Complete::Bash;
+        ($words, $cword) = @{ Complete::Bash::parse_cmdline(undef,undef,'=') };
+    } elsif ($r->{shell} eq 'tcsh') {
+        require Complete::Tcsh;
+        ($words, $cword) = @{ Complete::Tcsh::parse_cmdline(undef) }; # also break on '='
+    }
+
     shift @$words; $cword--; # strip program name
 
     # check whether subcommand is defined. try to search from --cmd, first
@@ -179,7 +197,15 @@ sub do_completion {
             return undef;
         },
     );
-    [200, "OK", Complete::Bash::format_completion($compres),
+
+    my $formatter;
+    if ($r->{shell} eq 'bash') {
+        $formatter = \&Complete::Bash::format_completion;
+    } elsif ($r->{shell} eq 'tcsh') {
+        $formatter = \&Complete::Tcsh::format_completion;
+    }
+
+    [200, "OK", $formatter->($compres),
      # these extra result are for debugging
      {
          "func.words" => $words,
@@ -649,7 +675,7 @@ sub run {
     my $r = {orig_argv=>[@ARGV]};
 
     # completion is special case, we delegate to do_completion()
-    if ($ENV{COMP_LINE}) {
+    if ($self->_detect_completion($r)) {
         $r->{res} = $self->do_completion($r);
         goto FORMAT;
     }
@@ -749,7 +775,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.53 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-21.
+This document describes version 0.54 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-23.
 
 =for Pod::Coverage ^(.+)$
 
@@ -1334,7 +1360,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Perinci-Cm
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
+Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
 
 =head1 BUGS
 

@@ -4,7 +4,7 @@
       "perlancar <perlancar@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.019, CPAN::Meta::Converter version 2.141170",
+   "generated_by" : "Dist::Zilla version 5.019, CPAN::Meta::Converter version 2.141520",
    "license" : [
       "perl_5"
    ],
@@ -30,6 +30,7 @@
       "runtime" : {
          "requires" : {
             "Complete::Bash" : "0.09",
+            "Complete::Tcsh" : "0",
             "Complete::Util" : "0.13",
             "Config::IOD::Reader" : "0",
             "Data::Check::Structure" : "0",
@@ -73,11 +74,11 @@
       "homepage" : "https://metacpan.org/release/Perinci-CmdLine-Lite",
       "repository" : {
          "type" : "git",
-         "url" : "git://github.com/perlancar/perl-Perinci-CmdLine-Lite.git",
-         "web" : "https://github.com/perlancar/perl-Perinci-CmdLine-Lite"
+         "url" : "git://github.com/sharyanto/perl-Perinci-CmdLine-Lite.git",
+         "web" : "https://github.com/sharyanto/perl-Perinci-CmdLine-Lite"
       }
    },
-   "version" : "0.53",
+   "version" : "0.54",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.018002"
@@ -362,7 +363,7 @@
                }
             },
             "name" : "@Author::PERLANCAR/Test::Compile",
-            "version" : "2.040"
+            "version" : "2.043"
          },
          {
             "class" : "Dist::Zilla::Plugin::Test::Rinci",

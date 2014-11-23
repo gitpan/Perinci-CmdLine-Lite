@@ -18,7 +18,7 @@ Perinci::CmdLine::Manual::FAQ - FAQs
 
 =head1 VERSION
 
-This document describes version 0.53 of Perinci::CmdLine::Manual::FAQ (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-21.
+This document describes version 0.54 of Perinci::CmdLine::Manual::FAQ (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-23.
 
 =head1 NOMENCLATURE
 
@@ -189,16 +189,16 @@ XXX
 
 =head2 How does completion work with P::C?
 
-Currently only bash completion is supported. Basically, you activate completion
-by invoking C<complete -C ProgramName ProgramName> in bash. This means, to get
-completion bash will execute the program with COMP_LINE and COMP_POINT
-environment set to the command-line and cursor position, respectively. P::C will
-detect these environment variables and do the completion for you (either
-providing list of subcommands, list of available options, or argument values).
-The process is quite transparent to you and is convenient.
+Currently bash and tcsh shells are supported. Basically, you activate completion
+by invoking C<complete -C ProgramName ProgramName> in bash (or C<complete
+ProgramName 'p/*/`ProgramName`/'> in tcsh). This means, to get completion bash
+will execute the program with COMP_LINE and COMP_POINT environment set to the
+command-line and cursor position, respectively (in tcsh, COMMAND_LINE is given
+instead). P::C will detect these environment variables and do the completion for
+you (either providing list of subcommands, list of available options, or
+argument values). The process is quite transparent to you and is convenient.
 
-Another alternative used by many is to generate C<complete> bash commands
-statically.
+Another alternative used by many is to generate C<complete> commands statically.
 
 The benefit of using the program to complete itself is convenience/flexibility:
 when arguments and subcommands change, completion need not be updated
@@ -276,7 +276,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Perinci-Cm
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
+Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
 
 =head1 BUGS
 

@@ -18,7 +18,7 @@ Perinci::CmdLine::Manual - Perinci::CmdLine manual
 
 =head1 VERSION
 
-This document describes version 0.53 of Perinci::CmdLine::Manual (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-21.
+This document describes version 0.54 of Perinci::CmdLine::Manual (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-23.
 
 =head1 DESCRIPTION
 
@@ -381,19 +381,11 @@ The resulting argument will be:
 
 For more examples on argument submetadata, see L<Perinci::Examples::SubMeta>.
 
-=head1 BASH COMPLETION
+=head1 SHELL COMPLETION
 
-To do bash completion, first create your script, e.g. C<myscript>, that uses
-Perinci::CmdLine:
+=head2 bash
 
- #!/usr/bin/perl
- use Perinci::CmdLine;
- Perinci::CmdLine->new(...)->run;
-
-then execute this in C<bash> (or put it in bash startup files like
-C</etc/bash.bashrc> or C<~/.bashrc> for future sessions):
-
- % complete -C myscript myscript; # myscript must be in PATH
+=head2 tcsh
 
 =head1 PROGRESS INDICATOR [P::C]
 
@@ -414,7 +406,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Perinci-Cm
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
+Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
 
 =head1 BUGS
 
