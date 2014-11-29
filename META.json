@@ -33,6 +33,7 @@
             "Complete::Fish" : "0.03",
             "Complete::Tcsh" : "0",
             "Complete::Util" : "0.13",
+            "Complete::Zsh" : "0",
             "Config::IOD::Reader" : "0",
             "Data::Check::Structure" : "0",
             "Data::Clean::JSON" : "0",
@@ -80,7 +81,7 @@
          "web" : "https://github.com/sharyanto/perl-Perinci-CmdLine-Lite"
       }
    },
-   "version" : "0.56",
+   "version" : "0.57",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.018002"
@@ -283,7 +284,7 @@
                      {
                         "class" : "Pod::Weaver::Section::Completion::PerinciCmdLine",
                         "name" : "@Author::PERLANCAR/Completion::PerinciCmdLine",
-                        "version" : "0.05"
+                        "version" : "0.06"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Homepage::DefaultCPAN",

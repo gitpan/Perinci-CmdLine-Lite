@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
 our $DATE = '2014-11-29'; # DATE
-our $VERSION = '0.56'; # VERSION
+our $VERSION = '0.57'; # VERSION
 
 use 5.010001;
 use Log::Any '$log';
@@ -174,6 +174,9 @@ sub do_completion {
     } elsif ($r->{shell} eq 'fish') {
         require Complete::Fish;
         ($words, $cword) = @{ Complete::Fish::parse_cmdline(undef) }; # XXX also break on '='
+    } elsif ($r->{shell} eq 'zsh') {
+        require Complete::Zsh;
+        ($words, $cword) = @{ Complete::Zsh::parse_cmdline(undef) }; # XXX also break on '='
     }
 
     shift @$words; $cword--; # strip program name
@@ -230,10 +233,12 @@ sub do_completion {
     my $formatter;
     if ($r->{shell} eq 'bash') {
         $formatter = \&Complete::Bash::format_completion;
-    } elsif ($r->{shell} eq 'tcsh') {
-        $formatter = \&Complete::Tcsh::format_completion;
     } elsif ($r->{shell} eq 'fish') {
         $formatter = \&Complete::Fish::format_completion;
+    } elsif ($r->{shell} eq 'tcsh') {
+        $formatter = \&Complete::Tcsh::format_completion;
+    } elsif ($r->{shell} eq 'zsh') {
+        $formatter = \&Complete::Zsh::format_completion;
     }
 
     [200, "OK", $formatter->($compres),
@@ -806,7 +811,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.56 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-29.
+This document describes version 0.57 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-29.
 
 =for Pod::Coverage ^(.+)$
 

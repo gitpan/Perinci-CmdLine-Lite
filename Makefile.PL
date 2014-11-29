@@ -24,6 +24,7 @@ my %WriteMakefileArgs = (
     "Complete::Fish" => "0.03",
     "Complete::Tcsh" => 0,
     "Complete::Util" => "0.13",
+    "Complete::Zsh" => 0,
     "Config::IOD::Reader" => 0,
     "Data::Check::Structure" => 0,
     "Data::Clean::JSON" => 0,
@@ -54,7 +55,7 @@ my %WriteMakefileArgs = (
     "Perinci::Examples" => "0.41",
     "Test::More" => "0.98"
   },
-  "VERSION" => "0.56",
+  "VERSION" => "0.57",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -67,6 +68,7 @@ my %FallbackPrereqs = (
   "Complete::Fish" => "0.03",
   "Complete::Tcsh" => 0,
   "Complete::Util" => "0.13",
+  "Complete::Zsh" => 0,
   "Config::IOD::Reader" => 0,
   "Data::Check::Structure" => 0,
   "Data::Clean::JSON" => 0,
