@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-11-23'; # DATE
-our $VERSION = '0.55'; # VERSION
+our $DATE = '2014-11-29'; # DATE
+our $VERSION = '0.56'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -529,9 +529,9 @@ sub run_help {
                 my $argv = '';
                 if (!$ospec->{main_opt} && defined($ospec->{pos})) {
                     if ($ospec->{greedy}) {
-                        $argv = " (=argv[$ospec->{pos}-])";
+                        $argv = " (=arg[$ospec->{pos}-])";
                     } else {
-                        $argv = " (=argv[$ospec->{pos}])";
+                        $argv = " (=arg[$ospec->{pos}])";
                     }
                 }
 
@@ -590,7 +590,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.55 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-23.
+This document describes version 0.56 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-29.
 
 =head1 SYNOPSIS
 

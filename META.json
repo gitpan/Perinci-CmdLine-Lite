@@ -29,7 +29,8 @@
       },
       "runtime" : {
          "requires" : {
-            "Complete::Bash" : "0.09",
+            "Complete::Bash" : "0.12",
+            "Complete::Fish" : "0.03",
             "Complete::Tcsh" : "0",
             "Complete::Util" : "0.13",
             "Config::IOD::Reader" : "0",
@@ -47,6 +48,7 @@
             "Perinci::Sub::Complete" : "0.60",
             "Perinci::Sub::GetArgs::Argv" : "0.55",
             "Perinci::Sub::To::CLIOptSpec" : "0.03",
+            "Perinci::Sub::To::FishComplete" : "0",
             "Rinci" : "v1.1.69",
             "Term::ReadKey" : "0",
             "Text::Table::Tiny" : "0",
@@ -78,7 +80,7 @@
          "web" : "https://github.com/sharyanto/perl-Perinci-CmdLine-Lite"
       }
    },
-   "version" : "0.55",
+   "version" : "0.56",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.018002"
@@ -276,12 +278,12 @@
                      {
                         "class" : "Pod::Weaver::Section::Completion::GetoptLongComplete",
                         "name" : "@Author::PERLANCAR/Completion::GetoptLongComplete",
-                        "version" : "0.02"
+                        "version" : "0.03"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Completion::PerinciCmdLine",
                         "name" : "@Author::PERLANCAR/Completion::PerinciCmdLine",
-                        "version" : "0.04"
+                        "version" : "0.05"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Homepage::DefaultCPAN",
