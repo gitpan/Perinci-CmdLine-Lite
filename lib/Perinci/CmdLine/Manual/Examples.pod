@@ -18,7 +18,7 @@ Perinci::CmdLine::Manual::Examples - Collection of examples
 
 =head1 VERSION
 
-This document describes version 0.57 of Perinci::CmdLine::Manual::Examples (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-29.
+This document describes version 0.58 of Perinci::CmdLine::Manual::Examples (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-02.
 
 =head1 DESCRIPTION
 
@@ -562,7 +562,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Perinci-Cm
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
+Source repository is at L<https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
 
 =head1 BUGS
 

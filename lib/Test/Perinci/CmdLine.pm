@@ -1,7 +1,7 @@
 package Test::Perinci::CmdLine;
 
-our $DATE = '2014-11-29'; # DATE
-our $VERSION = '0.57'; # VERSION
+our $DATE = '2014-12-02'; # DATE
+our $VERSION = '0.58'; # VERSION
 
 use 5.010;
 use strict;
@@ -126,7 +126,7 @@ Test::Perinci::CmdLine - Test library for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.57 of Test::Perinci::CmdLine (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-29.
+This document describes version 0.58 of Test::Perinci::CmdLine (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-02.
 
 =head1 FUNCTIONS
 
@@ -140,7 +140,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Perinci-Cm
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
+Source repository is at L<https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
 
 =head1 BUGS
 

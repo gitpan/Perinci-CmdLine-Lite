@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-11-29'; # DATE
-our $VERSION = '0.57'; # VERSION
+our $DATE = '2014-12-02'; # DATE
+our $VERSION = '0.58'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -435,7 +435,7 @@ sub run_help {
         push @help, " - ", $sum, "\n";
     }
 
-    my $cliospec;
+    my $clidocdata;
 
     # usage
     push @help, "\n";
@@ -448,29 +448,43 @@ sub run_help {
         push @help, "  $cmdname --version (or -v)\n";
         push @help, "  $cmdname --subcommands\n" if $has_sc_no_sc;
 
-        require Perinci::Sub::To::CLIOptSpec;
+        require Perinci::Sub::To::CLIDocData;
         my $res;
         if ($has_sc_no_sc) {
-            $res = Perinci::Sub::To::CLIOptSpec::gen_cli_opt_spec_from_meta(
+            $res = Perinci::Sub::To::CLIDocData::gen_cli_doc_data_from_meta(
                 meta => {v=>1.1}, meta_is_normalized => 1,
                 common_opts  => $self->common_opts,
                 per_arg_json => $self->per_arg_json,
                 per_arg_yaml => $self->per_arg_yaml,
             );
         } else {
-            $res = Perinci::Sub::To::CLIOptSpec::gen_cli_opt_spec_from_meta(
+            $res = Perinci::Sub::To::CLIDocData::gen_cli_doc_data_from_meta(
                 meta => $meta, meta_is_normalized => 1,
                 common_opts  => $self->common_opts,
                 per_arg_json => $self->per_arg_json,
                 per_arg_yaml => $self->per_arg_yaml,
             );
         }
-        die [500, "gen_cli_opt_spec_from_meta failed: ".
+        die [500, "gen_cli_doc_data_from_meta failed: ".
                  "$res->[0] - $res->[1]"] unless $res->[0] == 200;
-        $cliospec = $res->[2];
-        my $usage = $cliospec->{usage_line};
+        $clidocdata = $res->[2];
+        my $usage = $clidocdata->{usage_line};
         $usage =~ s/\[\[prog\]\]/$cmdname/;
         push @help, "  $usage\n";
+    }
+
+    # example
+    {
+        last unless @{ $clidocdata->{examples} };
+        push @help, "\n";
+        push @help, "Examples:\n";
+        for my $eg (@{ $clidocdata->{examples} }) {
+            my $cmdline = $eg->{cmdline};
+            $cmdline =~ s/\[\[prog\]\]/$cmdname/;
+            push @help, "  $eg->{summary}:\n" if $eg->{summary};
+            push @help, "  % $cmdline\n";
+            push @help, "\n" if $eg->{summary};
+        }
     }
 
     # description
@@ -488,7 +502,7 @@ sub run_help {
     {
         require Data::Dmp;
 
-        my $opts = $cliospec->{opts};
+        my $opts = $clidocdata->{opts};
         last unless keys %$opts;
 
         # find all the categories
@@ -590,7 +604,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.57 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-11-29.
+This document describes version 0.58 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-02.
 
 =head1 SYNOPSIS
 
@@ -765,7 +779,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Perinci-Cm
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
+Source repository is at L<https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
 
 =head1 BUGS
 

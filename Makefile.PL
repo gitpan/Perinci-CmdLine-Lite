@@ -39,7 +39,7 @@ my %WriteMakefileArgs = (
     "Perinci::Object" => 0,
     "Perinci::Sub::Complete" => "0.60",
     "Perinci::Sub::GetArgs::Argv" => "0.55",
-    "Perinci::Sub::To::CLIOptSpec" => "0.03",
+    "Perinci::Sub::To::CLIDocData" => 0,
     "Perinci::Sub::To::FishComplete" => 0,
     "Rinci" => "v1.1.69",
     "Term::ReadKey" => 0,
@@ -55,7 +55,7 @@ my %WriteMakefileArgs = (
     "Perinci::Examples" => "0.41",
     "Test::More" => "0.98"
   },
-  "VERSION" => "0.57",
+  "VERSION" => "0.58",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -88,7 +88,7 @@ my %FallbackPrereqs = (
   "Perinci::Object" => 0,
   "Perinci::Sub::Complete" => "0.60",
   "Perinci::Sub::GetArgs::Argv" => "0.55",
-  "Perinci::Sub::To::CLIOptSpec" => "0.03",
+  "Perinci::Sub::To::CLIDocData" => 0,
   "Perinci::Sub::To::FishComplete" => 0,
   "Rinci" => "v1.1.69",
   "Term::ReadKey" => 0,
