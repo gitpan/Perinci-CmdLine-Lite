@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-12-02'; # DATE
-our $VERSION = '0.58'; # VERSION
+our $DATE = '2014-12-03'; # DATE
+our $VERSION = '0.59'; # VERSION
 
 use 5.010001;
 use Log::Any '$log';
@@ -811,7 +811,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.58 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-02.
+This document describes version 0.59 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-03.
 
 =for Pod::Coverage ^(.+)$
 

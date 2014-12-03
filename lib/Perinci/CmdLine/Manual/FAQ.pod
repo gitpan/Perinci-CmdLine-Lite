@@ -18,7 +18,7 @@ Perinci::CmdLine::Manual::FAQ - FAQs
 
 =head1 VERSION
 
-This document describes version 0.58 of Perinci::CmdLine::Manual::FAQ (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-02.
+This document describes version 0.59 of Perinci::CmdLine::Manual::FAQ (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-03.
 
 =head1 NOMENCLATURE
 

@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-12-02'; # DATE
-our $VERSION = '0.58'; # VERSION
+our $DATE = '2014-12-03'; # DATE
+our $VERSION = '0.59'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -110,6 +110,30 @@ sub BUILD {
                 handler => sub {
                     my ($go, $val, $r) = @_;
                     $r->{format} = 'json';
+                },
+            },
+            naked_res => {
+                getopt  => 'naked-res',
+                summary => 'When outputing as JSON, strip result envelope',
+                description => <<'_',
+
+By default, when outputing as JSON, the full enveloped result is returned, e.g.:
+
+    [200,"OK",[1,2,3],{"func.extra"=>4}]
+
+The reason is so you can get the status (1st element), status message (2nd
+element) as well as result metadata/extra result (4th element) instead of just
+the result (3rd element). However, sometimes you want just the result, e.g. when
+you want to pipe the result for more post-processing:
+
+    [1,2,3]
+
+In this case, you can use `--naked-res`.
+
+_
+                handler => sub {
+                    my ($go, $val, $r) = @_;
+                    $r->{naked_res} = 1;
                 },
             },
         };
@@ -326,6 +350,8 @@ sub hook_format_result {
             }
         }
     }
+
+    $res = $res->[2] if $r->{naked_res};
 
     warn "Unknown format '$format', fallback to json-pretty"
         unless $format =~ /\Ajson(-pretty)?\z/;
@@ -604,7 +630,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.58 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-02.
+This document describes version 0.59 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-03.
 
 =head1 SYNOPSIS
 
@@ -710,6 +736,18 @@ Some functions might expect a L<Perinci::CmdLine> instance.
 =back
 
 =for Pod::Coverage ^(BUILD|get_meta|hook_.+|run_.+)$
+
+=head1 REQUEST KEYS
+
+All those supported by L<Perinci::CmdLine::Base>, plus:
+
+=over
+
+=item * naked_res => bool
+
+Set to true if user specifies C<--naked-res>.
+
+=back
 
 =head1 ATTRIBUTES
 

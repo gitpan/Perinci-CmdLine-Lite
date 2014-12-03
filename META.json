@@ -81,7 +81,7 @@
          "web" : "https://github.com/perlancar/perl-Perinci-CmdLine-Lite"
       }
    },
-   "version" : "0.58",
+   "version" : "0.59",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.018002"
@@ -264,7 +264,7 @@
                      {
                         "class" : "Pod::Weaver::Plugin::Rinci",
                         "name" : "@Author::PERLANCAR/Rinci",
-                        "version" : "0.19"
+                        "version" : "0.20"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Leftovers",

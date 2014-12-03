@@ -50,7 +50,7 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Perinci-CmdLine-Lite
   homepage: https://metacpan.org/release/Perinci-CmdLine-Lite
   repository: git://github.com/perlancar/perl-Perinci-CmdLine-Lite.git
-version: '0.58'
+version: '0.59'
 x_Dist_Zilla:
   perl:
     version: '5.018002'
@@ -197,7 +197,7 @@ x_Dist_Zilla:
             -
               class: Pod::Weaver::Plugin::Rinci
               name: '@Author::PERLANCAR/Rinci'
-              version: '0.19'
+              version: '0.20'
             -
               class: Pod::Weaver::Section::Leftovers
               name: '@Author::PERLANCAR/Leftovers'
