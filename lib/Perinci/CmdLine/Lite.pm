@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-12-03'; # DATE
-our $VERSION = '0.59'; # VERSION
+our $DATE = '2014-12-13'; # DATE
+our $VERSION = '0.60'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -197,6 +197,8 @@ _
             $co->{log_level} = {
                 getopt  => 'log-level=s',
                 summary => 'Set log level',
+                schema  => ['str*' => in => [
+                    qw/trace debug info warn warning error fatal/]],
                 handler => sub {
                     my ($go, $val, $r) = @_;
                     $r->{log_level} = $val;
@@ -504,12 +506,15 @@ sub run_help {
         last unless @{ $clidocdata->{examples} };
         push @help, "\n";
         push @help, "Examples:\n";
-        for my $eg (@{ $clidocdata->{examples} }) {
+        my $i = 0;
+        my $egs = $clidocdata->{examples};
+        for my $eg (@$egs) {
+            $i++;
             my $cmdline = $eg->{cmdline};
             $cmdline =~ s/\[\[prog\]\]/$cmdname/;
             push @help, "  $eg->{summary}:\n" if $eg->{summary};
             push @help, "  % $cmdline\n";
-            push @help, "\n" if $eg->{summary};
+            push @help, "\n" if $eg->{summary} && $i < @$egs;
         }
     }
 
@@ -555,7 +560,8 @@ sub run_help {
                     $arg_spec->{schema}[0] eq 'bool';
                 my $show_default = exists($ospec->{default}) &&
                     !$is_bool && !$ospec->{is_base64} &&
-                        !$ospec->{is_json} && !$ospec->{is_yaml};
+                        !$ospec->{is_json} && !$ospec->{is_yaml} &&
+                            !$ospec->{is_alias};
 
                 my $add_sum = '';
                 if ($ospec->{is_base64}) {
@@ -630,7 +636,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.59 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-03.
+This document describes version 0.60 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-13.
 
 =head1 SYNOPSIS
 
@@ -817,7 +823,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Perinci-Cm
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
+Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
 
 =head1 BUGS
 

@@ -18,7 +18,7 @@ Perinci::CmdLine::Manual - Perinci::CmdLine manual
 
 =head1 VERSION
 
-This document describes version 0.59 of Perinci::CmdLine::Manual (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-03.
+This document describes version 0.60 of Perinci::CmdLine::Manual (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-13.
 
 =head1 DESCRIPTION
 
@@ -46,14 +46,14 @@ below are equivalent:
  % mycmd -h
  % mycmd -?
 
-=item * Tab completion for bash (including completion from remote code)
+=item * Tab completion for various shells (including completion from remote code)
+
+Example for bash:
 
  % complete -C mycmd mycmd
  % mycmd --he<tab> ; # --help
  % mycmd s<tab>    ; # sub1, sub2, sub3 (if those are the specified subcommands)
  % mycmd sub1 -<tab> ; # list the options available for sub1 subcommand
-
-Support for other shell might be added in the future upon request.
 
 =item * Undo/redo/history
 
@@ -137,13 +137,16 @@ function to call.
 
 TODO
 
-=head1 LOGGING [P::C]
+=head1 LOGGING
 
-Logging is done with L<Log::Any> (for producing) and L<Log::Any::App> (for
-displaying to outputs). Loading Log::Any::App will add to startup overhead time,
-so this module tries to be smart when determining whether or not to do logging
-output (i.e. whether or not to load Log::Any::App). Here are the order of rules
-being used:
+Logging is done with L<Log::Any> (for producing). For displaying logs, P::C uses
+L<Log::Any::App> currently which supports multiple outputs (screen, file, etc)
+while P::C::Lite currently uses L<Log::Any::Adapter::ScreenColoredLevel> which
+only supports displaying to screen.
+
+Loading Log::Any adapters adds to startup overhead time, so the framework tries
+to be smart when determining whether or not to do logging output. Here are the
+order of rules being used:
 
 =over
 
@@ -155,23 +158,23 @@ Normally, shell completion does not need to show log output.
 
 You can make a command-line program start a bit faster if you use LOG=0.
 
-=item * If subcommand's log_any_app setting is defined, use that
+=item * If subcommand's C<log> setting is defined, use that
 
 This allows you, e.g. to turn off logging by default for subcommands that need
 faster startup time. You can still turn on logging for those subcommands by
 LOG=1.
 
-=item * If action metadata's default_log setting is defined, use that
+=item * [P::C] If action metadata's default_log setting is defined, use that
 
 For example, actions like C<help>, C<list>, and C<version> has C<default_log>
 set to 0, for faster startup time. You can still turn on logging for those
 actions by LOG=1.
 
-=item * Use log_any_app attribute setting
+=item * Use log attribute setting
 
 =back
 
-=head1 UTF8 OUTPUT [P::C]
+=head1 [P::C] UTF8 OUTPUT
 
 By default, C<< binmode(STDOUT, ":utf8") >> is issued if utf8 output is desired.
 This is determined by, in order:
@@ -383,11 +386,29 @@ For more examples on argument submetadata, see L<Perinci::Examples::SubMeta>.
 
 =head1 SHELL COMPLETION
 
-=head2 bash
+The framework can detect when C<COMP_LINE> and C<COMP_POINT> environment
+variables (set by bash when completing using external command) are set and then
+answer the completion. In bash, activating tab completion for your script is as
+easy as (assuming your script is already in PATH):
 
-=head2 tcsh
+ % complete -C yourscript yourscript
 
-=head2 zsh
+That is, your script can complete itself. The above command can be put in
+C<~/.bashrc>. But it is recommended that you use L<shcompgen> instead (see
+below).
+
+Tcsh uses C<COMMAND_LINE> instead. The framework can also detect that.
+
+For other shells: some shells can emulate bash (like zsh) and for some other
+(like fish) you need to generate a set of C<complete> commands for each
+command-line option.
+
+C<shcompgen> is a CLI tool that can detect all scripts in PATH if they are using
+P::C (as well as a few other frameworks) and generate shell completion scripts
+for them. It supports several shells. Combined with
+L<Dist::Zilla::Plugin::GenShellCompletion>, you can make it so that users
+installing your distribution can immediately/automatically activate tab
+completion for your scripts.
 
 =head1 PROGRESS INDICATOR [P::C]
 
@@ -408,7 +429,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Perinci-Cm
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
+Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
 
 =head1 BUGS
 

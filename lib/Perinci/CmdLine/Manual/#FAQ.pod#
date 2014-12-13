@@ -6,26 +6,13 @@ package Perinci::CmdLine::Manual::FAQ; # just to make podweaver happy
 1;
 # ABSTRACT: FAQs
 
-__END__
-
-=pod
-
-=encoding UTF-8
-
-=head1 NAME
-
-Perinci::CmdLine::Manual::FAQ - FAQs
-
-=head1 VERSION
-
-This document describes version 0.60 of Perinci::CmdLine::Manual::FAQ (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-13.
-
 =head1 NOMENCLATURE
 
 C<[Full]> denotes that the answer applies to L<Perinci::CmdLine> only and not
 L<Perinci::CmdLine::Lite>. C<[Lite]> denotes that the answer is specific to
 Perinci::CmdLine::Lite. C<[Any]> denotes that the answer is specific to
 L<Perinci::CmdLine::Any>.
+
 
 =head1 GENERAL
 
@@ -49,12 +36,14 @@ for remote code as well as local Perl code.
 This framework is currently non-OO and function-centric. There are already
 several OO-based command-line frameworks on CPAN.
 
+
 =head1 DEBUGGING
 
 =head2 How do I debug my program?
 
 [Full] You can set environment DEBUG=1 or TRACE=1. See L<Log::Any::App> for more
 details.
+
 
 =head1 INPUT
 
@@ -162,6 +151,7 @@ subroutine based on another:
  );
  Perinci::CmdLine->new(url => '/main/f1')->run;
 
+
 =head1 OUTPUT AND FORMATTING
 
 =head2 I don't want borders!
@@ -229,52 +219,8 @@ or perhaps rename it:
 
 XXX
 
+
 =head1 SHELL COMPLETION
-
-=head2 How does completion work with P::C?
-
-Currently bash, fish, tcsh, and zsh shells are supported.
-
-Basically, you first activate completion for your script by invoking C<complete>
-(or C<compctl> in the case of zsh) shell internal command which tells the shell
-to invoke your script with special environment variable set so P::C can provide
-completion answer for the shell. For example, in bash the C<complete> command
-is:
-
- complete -C yourscript yourscript
-
-Then when you press C<Tab> in this command:
-
- % yourscript --opt <Tab>
-
-then bash will invoke C<yourscript> with C<COMP_LINE> environment set to
-C<yourscript --opt > and C<COMP_POINT> set to 17 (the cursor position).
-Perinci::CmdLine, looking that C<COMP_LINE> is set, will try to provide a
-completion for the above command-line. First, it will retrieve the approriate
-function metadata, search the argument that corresponds to the command-line
-option C<--opt>, and try several methods to complete its value (e.g. from
-argument specification property C<completion>, if exists, or from C<in> clause
-in the argument's schema, or if all things fail, usually from files/directories
-on the filesystem). It will then print the completion answer to STDOUT like
-this:
-
- one
- two
- three
-
-Bash will then use this to provide completion for the user.
-
-The exact C<complete>/C<compctl> command can be generated, for example, by
-L<Pod::Weaver::Section::Completion::PerinciCmdLine>.
-
-The downside of using the program to complete itself, like the abovementioned
-mechanism, is startup overhead. Everytime the Tab key is pressed, the shell will
-invoke the script. That's why it's important for P::C to keep having a small
-startup overhead. P::C::Lite is written specifically with this issue in mind.
-The goal of P::C::Lite is to have startup overhead of under 0.05s, so it can
-still feel instantaneous when doing tab completion. Of course, you also need to
-do your part by not loading too many modules or by delaying loading modules to
-avoid having a large startup overhead.
 
 =head2 How to do custom completion for my argument?
 
@@ -329,35 +275,7 @@ debugging information:
 
  % COMP_LINE='myprog --arg x' COMP_POINT=13 PERL5OPT=-MLog::Any::App TRACE=1 myprog --arg x
 
+
 =head1 SEE ALSO
 
 L<Perinci::CmdLine::Manual>
-
-=head1 HOMEPAGE
-
-Please visit the project's homepage at L<https://metacpan.org/release/Perinci-CmdLine-Lite>.
-
-=head1 SOURCE
-
-Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
-
-=head1 BUGS
-
-Please report any bugs or feature requests on the bugtracker website L<https://rt.cpan.org/Public/Dist/Display.html?Name=Perinci-CmdLine-Lite>
-
-When submitting a bug or request, please include a test-file or a
-patch to an existing test-file that illustrates the bug or desired
-feature.
-
-=head1 AUTHOR
-
-perlancar <perlancar@cpan.org>
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2014 by perlancar@cpan.org.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
-
-=cut

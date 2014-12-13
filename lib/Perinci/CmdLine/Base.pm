@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-12-03'; # DATE
-our $VERSION = '0.59'; # VERSION
+our $DATE = '2014-12-13'; # DATE
+our $VERSION = '0.60'; # VERSION
 
 use 5.010001;
 use Log::Any '$log';
@@ -123,8 +123,6 @@ sub status2exitcode {
 sub _detect_completion {
     my ($self, $r) = @_;
 
-    $r->{completion_mode} = $ENV{COMP_MODE} // 'gen_answer';
-
     if ($ENV{COMP_SHELL}) {
         $r->{shell} = $ENV{COMP_SHELL};
         return 1;
@@ -144,26 +142,6 @@ sub do_completion {
 
     local $r->{in_completion} = 1;
 
-    if ($r->{completion_mode} eq 'gen_command') {
-        my $func;
-        if ($r->{shell} eq 'fish') {
-            require Perinci::Sub::To::FishComplete;
-            $func = \&Perinci::Sub::To::FishComplete::gen_fish_complete_from_meta;
-        } else {
-            #require Perinci::Sub::To::BashComplete;
-            #$func = \&Perinci::Sub::To::BashComplete::gen_bash_complete_from_meta;
-            die "Only fish is currently supported when COMP_MODE=gen_command\n";
-        }
-        my $scd = $r->{subcommand_data};
-        my $meta = $self->get_meta($r, $scd->{url} // $self->{url});
-        return $func->(
-            meta => $meta, meta_is_normalized=>1,
-            common_opts  => $self->common_opts,
-            per_arg_json => $self->per_arg_json,
-            per_arg_yaml => $self->per_arg_yaml,
-        );
-    }
-
     my ($words, $cword);
     if ($r->{shell} eq 'bash') {
         require Complete::Bash;
@@ -171,12 +149,8 @@ sub do_completion {
     } elsif ($r->{shell} eq 'tcsh') {
         require Complete::Tcsh;
         ($words, $cword) = @{ Complete::Tcsh::parse_cmdline(undef) }; # XXX also break on '='
-    } elsif ($r->{shell} eq 'fish') {
-        require Complete::Fish;
-        ($words, $cword) = @{ Complete::Fish::parse_cmdline(undef) }; # XXX also break on '='
-    } elsif ($r->{shell} eq 'zsh') {
-        require Complete::Zsh;
-        ($words, $cword) = @{ Complete::Zsh::parse_cmdline(undef) }; # XXX also break on '='
+    } else {
+        die "Unsupported shell '$r->{shell}'";
     }
 
     shift @$words; $cword--; # strip program name
@@ -233,12 +207,8 @@ sub do_completion {
     my $formatter;
     if ($r->{shell} eq 'bash') {
         $formatter = \&Complete::Bash::format_completion;
-    } elsif ($r->{shell} eq 'fish') {
-        $formatter = \&Complete::Fish::format_completion;
     } elsif ($r->{shell} eq 'tcsh') {
         $formatter = \&Complete::Tcsh::format_completion;
-    } elsif ($r->{shell} eq 'zsh') {
-        $formatter = \&Complete::Zsh::format_completion;
     }
 
     [200, "OK", $formatter->($compres),
@@ -811,7 +781,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.59 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-03.
+This document describes version 0.60 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-13.
 
 =for Pod::Coverage ^(.+)$
 
@@ -1396,7 +1366,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Perinci-Cm
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
+Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Lite>.
 
 =head1 BUGS
 
