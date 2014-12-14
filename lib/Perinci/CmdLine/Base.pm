@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
 our $DATE = '2014-12-13'; # DATE
-our $VERSION = '0.61'; # VERSION
+our $VERSION = '0.62'; # VERSION
 
 use 5.010001;
 use Log::Any '$log';
@@ -330,27 +330,12 @@ sub _parse_argv1 {
 
     # also set dry-run on environment
     $r->{dry_run} = 1 if $ENV{DRY_RUN};
+
+    $r->{_parse_argv1_done} = 1;
 }
 
-sub parse_argv {
+sub _parse_argv2 {
     my ($self, $r) = @_;
-
-    # we parse argv twice. the first parse is with common_opts only so we're
-    # able to catch --help, --version, etc early without having to know about
-    # subcommands. two reasons for this: sometimes we need to get subcommand
-    # name *from* cmdline opts (e.g. --cmd) and thus it's a chicken-and-egg
-    # problem. second, it's faster because we don't have to load Riap client and
-    # request the meta through it (especially in the case of remote URL).
-    #
-    # the second parse is after ge get subcommand name and the function
-    # metadata. we can parse the remaining argv to get function arguments.
-    #
-    # note that when doing completion we're not using this algorithem and only
-    # parse argv once. this is to make completion work across common- and
-    # per-subcommand opts, e.g. --he<tab> resulting in --help (common opt) as
-    # well as --height (function argument).
-
-    $self->_parse_argv1($r);
 
     my %args;
 
@@ -469,6 +454,28 @@ sub parse_argv {
 
         return $res;
     }
+}
+
+sub parse_argv {
+    my ($self, $r) = @_;
+
+    # we parse argv twice. the first parse is with common_opts only so we're
+    # able to catch --help, --version, etc early without having to know about
+    # subcommands. two reasons for this: sometimes we need to get subcommand
+    # name *from* cmdline opts (e.g. --cmd) and thus it's a chicken-and-egg
+    # problem. second, it's faster because we don't have to load Riap client and
+    # request the meta through it (especially in the case of remote URL).
+    #
+    # the second parse is after ge get subcommand name and the function
+    # metadata. we can parse the remaining argv to get function arguments.
+    #
+    # note that when doing completion we're not using this algorithem and only
+    # parse argv once. this is to make completion work across common- and
+    # per-subcommand opts, e.g. --he<tab> resulting in --help (common opt) as
+    # well as --height (function argument).
+
+    $self->_parse_argv1($r) unless $r->{_parse_argv1_done};
+    $self->_parse_argv2($r);
 }
 
 # parse cmdline_src argument spec properties for filling argument value from
@@ -782,7 +789,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.61 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-13.
+This document describes version 0.62 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-13.
 
 =for Pod::Coverage ^(.+)$
 
