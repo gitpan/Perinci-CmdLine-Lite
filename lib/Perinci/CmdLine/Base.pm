@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
 our $DATE = '2014-12-13'; # DATE
-our $VERSION = '0.60'; # VERSION
+our $VERSION = '0.61'; # VERSION
 
 use 5.010001;
 use Log::Any '$log';
@@ -180,6 +180,7 @@ sub do_completion {
         riap_server_url => $scd->{url},
         riap_uri        => undef,
         riap_client     => $self->riap_client,
+        extras          => {r=>$r, cmdline=>$self},
         completion      => sub {
             my %args = @_;
             my $type = $args{type};
@@ -781,7 +782,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.60 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-13.
+This document describes version 0.61 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-13.
 
 =for Pod::Coverage ^(.+)$
 
