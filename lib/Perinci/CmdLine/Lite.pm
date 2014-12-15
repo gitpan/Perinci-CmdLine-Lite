@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-12-13'; # DATE
-our $VERSION = '0.62'; # VERSION
+our $DATE = '2014-12-15'; # DATE
+our $VERSION = '0.63'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -306,13 +306,7 @@ sub hook_format_result {
             } elsif (ref($data) eq 'ARRAY' && !@$data) {
                 return "";
             } elsif (Data::Check::Structure::is_aos($data, {max=>$max})) {
-                if ($is_pretty) {
-                    require Text::Table::Tiny;
-                    $data = [map {[$_]} @$data];
-                    return Text::Table::Tiny::table(rows=>$data) . "\n";
-                } else {
-                    return join("", map {"$_\n"} @$data);
-                }
+                return join("", map {"$_\n"} @$data);
             } elsif (Data::Check::Structure::is_aoaos($data, {max=>$max})) {
                 if ($is_pretty) {
                     require Text::Table::Tiny;
@@ -636,7 +630,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.62 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-13.
+This document describes version 0.63 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-15.
 
 =head1 SYNOPSIS
 

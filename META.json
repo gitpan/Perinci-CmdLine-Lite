@@ -78,7 +78,7 @@
          "web" : "https://github.com/sharyanto/perl-Perinci-CmdLine-Lite"
       }
    },
-   "version" : "0.62",
+   "version" : "0.63",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.018002"
@@ -169,6 +169,16 @@
             "class" : "Dist::Zilla::Plugin::UploadToCPAN",
             "name" : "@Author::PERLANCAR/@Filter/UploadToCPAN",
             "version" : "5.025"
+         },
+         {
+            "class" : "Dist::Zilla::Plugin::Rinci::AbstractFromMeta",
+            "name" : "@Author::PERLANCAR/Rinci::AbstractFromMeta",
+            "version" : "0.02"
+         },
+         {
+            "class" : "Dist::Zilla::Plugin::PodnameFromFilename",
+            "name" : "@Author::PERLANCAR/PodnameFromFilename",
+            "version" : "0.01"
          },
          {
             "class" : "Dist::Zilla::Plugin::PERLANCAR::MetaResources",

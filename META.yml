@@ -47,7 +47,7 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Perinci-CmdLine-Lite
   homepage: https://metacpan.org/release/Perinci-CmdLine-Lite
   repository: git://github.com/sharyanto/perl-Perinci-CmdLine-Lite.git
-version: '0.62'
+version: '0.63'
 x_Dist_Zilla:
   perl:
     version: '5.018002'
@@ -120,6 +120,14 @@ x_Dist_Zilla:
       class: Dist::Zilla::Plugin::UploadToCPAN
       name: '@Author::PERLANCAR/@Filter/UploadToCPAN'
       version: '5.025'
+    -
+      class: Dist::Zilla::Plugin::Rinci::AbstractFromMeta
+      name: '@Author::PERLANCAR/Rinci::AbstractFromMeta'
+      version: '0.02'
+    -
+      class: Dist::Zilla::Plugin::PodnameFromFilename
+      name: '@Author::PERLANCAR/PodnameFromFilename'
+      version: '0.01'
     -
       class: Dist::Zilla::Plugin::PERLANCAR::MetaResources
       name: '@Author::PERLANCAR/PERLANCAR::MetaResources'
