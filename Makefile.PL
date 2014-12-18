@@ -21,9 +21,6 @@ my %WriteMakefileArgs = (
   "MIN_PERL_VERSION" => "5.010001",
   "NAME" => "Perinci::CmdLine::Lite",
   "PREREQ_PM" => {
-    "Complete::Bash" => "0.12",
-    "Complete::Tcsh" => 0,
-    "Complete::Util" => "0.13",
     "Config::IOD::Reader" => 0,
     "Data::Check::Structure" => 0,
     "Data::Clean::JSON" => 0,
@@ -53,7 +50,7 @@ my %WriteMakefileArgs = (
     "Perinci::Examples" => "0.41",
     "Test::More" => "0.98"
   },
-  "VERSION" => "0.63",
+  "VERSION" => "0.64",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -62,9 +59,6 @@ my %WriteMakefileArgs = (
 
 my %FallbackPrereqs = (
   "Capture::Tiny" => 0,
-  "Complete::Bash" => "0.12",
-  "Complete::Tcsh" => 0,
-  "Complete::Util" => "0.13",
   "Config::IOD::Reader" => 0,
   "Data::Check::Structure" => 0,
   "Data::Clean::JSON" => 0,
@@ -102,6 +96,12 @@ unless ( eval { ExtUtils::MakeMaker->VERSION(6.63_03) } ) {
 
 delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
   unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
+
+if ( $^O =~ /^(aix|cygwin|darwin|dragonfly|freebsd|gnukfreebsd|hpux|interix|irix|linux|midnightbsd|minix|mirbsd|netbsd|openbsd|sco|solaris)$/i ) {
+	$WriteMakefileArgs{PREREQ_PM}{'Complete::Bash'} = '0.12';
+	$WriteMakefileArgs{PREREQ_PM}{'Complete::Tcsh'} = '0';
+	$WriteMakefileArgs{PREREQ_PM}{'Complete::Util'} = '0.13';
+}
 
 WriteMakefile(%WriteMakefileArgs);
 
