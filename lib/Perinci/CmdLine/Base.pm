@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
 our $DATE = '2014-12-18'; # DATE
-our $VERSION = '0.65'; # VERSION
+our $VERSION = '0.66'; # VERSION
 
 use 5.010001;
 use Log::Any '$log';
@@ -46,7 +46,7 @@ has config_filename => (is=>'rw');
 has config_dirs => (
     is=>'rw',
     default => sub {
-        ["/etc", $ENV{HOME}];
+        [grep {defined} ("/etc", $ENV{HOME}, $ENV{HOMEPATH})];
     },
 );
 
@@ -789,7 +789,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.65 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-18.
+This document describes version 0.66 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-18.
 
 =for Pod::Coverage ^(.+)$
 
