@@ -12,7 +12,7 @@ build_requires:
   Test::More: '0.98'
 configure_requires:
   ExtUtils::MakeMaker: '0'
-dynamic_config: 1
+dynamic_config: 0
 generated_by: 'Dist::Zilla version 5.025, CPAN::Meta::Converter version 2.143240'
 license: perl
 meta-spec:
@@ -20,6 +20,9 @@ meta-spec:
   version: '1.4'
 name: Perinci-CmdLine-Lite
 requires:
+  Complete::Bash: '0.12'
+  Complete::Tcsh: '0'
+  Complete::Util: '0.13'
   Config::IOD::Reader: '0'
   Data::Check::Structure: '0'
   Data::Clean::JSON: '0'
@@ -44,7 +47,7 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Perinci-CmdLine-Lite
   homepage: https://metacpan.org/release/Perinci-CmdLine-Lite
   repository: git://github.com/perlancar/perl-Perinci-CmdLine-Lite.git
-version: '0.64'
+version: '0.65'
 x_Dist_Zilla:
   perl:
     version: '5.018002'
@@ -312,13 +315,6 @@ x_Dist_Zilla:
           type: requires
       name: Prereqs
       version: '5.025'
-    -
-      class: Dist::Zilla::Plugin::OSPrereqs::Unix
-      config:
-        Dist::Zilla::Plugin::OSPrereqs:
-          os: '~^(aix|cygwin|darwin|dragonfly|freebsd|gnukfreebsd|hpux|interix|irix|linux|midnightbsd|minix|mirbsd|netbsd|openbsd|sco|solaris)$'
-      name: OSPrereqs::Unix
-      version: '0.01'
     -
       class: Dist::Zilla::Plugin::FinderCode
       name: ':InstallModules'
