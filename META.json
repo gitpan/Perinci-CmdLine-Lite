@@ -14,6 +14,11 @@
    },
    "name" : "Perinci-CmdLine-Lite",
    "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Perl::osnames" : "0.09"
+         }
+      },
       "configure" : {
          "requires" : {
             "ExtUtils::MakeMaker" : "0"
@@ -36,6 +41,7 @@
             "Data::Check::Structure" : "0",
             "Data::Clean::JSON" : "0",
             "Data::Dmp" : "0",
+            "File::HomeDir" : "0",
             "File::Which" : "0",
             "JSON" : "0",
             "Log::Any" : "0",
@@ -78,7 +84,7 @@
          "web" : "https://github.com/perlancar/perl-Perinci-CmdLine-Lite"
       }
    },
-   "version" : "0.66",
+   "version" : "0.67",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.018002"
@@ -208,7 +214,7 @@
          {
             "class" : "Dist::Zilla::Plugin::GenShellCompletion",
             "name" : "@Author::PERLANCAR/GenShellCompletion",
-            "version" : "0.05"
+            "version" : "0.06"
          },
          {
             "class" : "Dist::Zilla::Plugin::OurDate",

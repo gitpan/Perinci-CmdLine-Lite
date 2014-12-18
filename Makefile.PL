@@ -12,6 +12,9 @@ use ExtUtils::MakeMaker;
 my %WriteMakefileArgs = (
   "ABSTRACT" => "A lightweight Rinci/Riap-based command-line application framework",
   "AUTHOR" => "perlancar <perlancar\@cpan.org>",
+  "BUILD_REQUIRES" => {
+    "Perl::osnames" => "0.09"
+  },
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => 0
   },
@@ -28,6 +31,7 @@ my %WriteMakefileArgs = (
     "Data::Check::Structure" => 0,
     "Data::Clean::JSON" => 0,
     "Data::Dmp" => 0,
+    "File::HomeDir" => 0,
     "File::Which" => 0,
     "JSON" => 0,
     "Log::Any" => 0,
@@ -53,7 +57,7 @@ my %WriteMakefileArgs = (
     "Perinci::Examples" => "0.41",
     "Test::More" => "0.98"
   },
-  "VERSION" => "0.66",
+  "VERSION" => "0.67",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -70,6 +74,7 @@ my %FallbackPrereqs = (
   "Data::Clean::JSON" => 0,
   "Data::Dmp" => 0,
   "ExtUtils::MakeMaker" => 0,
+  "File::HomeDir" => 0,
   "File::Slurp::Tiny" => 0,
   "File::Spec" => 0,
   "File::Which" => 0,
@@ -86,6 +91,7 @@ my %FallbackPrereqs = (
   "Perinci::Sub::Complete" => "0.60",
   "Perinci::Sub::GetArgs::Argv" => "0.55",
   "Perinci::Sub::To::CLIDocData" => 0,
+  "Perl::osnames" => "0.09",
   "Rinci" => "1.1.69",
   "Term::ReadKey" => 0,
   "Test::More" => "0.98",

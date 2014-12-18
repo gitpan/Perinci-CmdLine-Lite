@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
 our $DATE = '2014-12-18'; # DATE
-our $VERSION = '0.66'; # VERSION
+our $VERSION = '0.67'; # VERSION
 
 use 5.010001;
 use Log::Any '$log';
@@ -46,7 +46,17 @@ has config_filename => (is=>'rw');
 has config_dirs => (
     is=>'rw',
     default => sub {
-        [grep {defined} ("/etc", $ENV{HOME}, $ENV{HOMEPATH})];
+        my @dirs;
+        if ($^O eq 'MSWin32') {
+            require File::HomeDir;
+            # currently i don't know where is the appropriate place equivalent
+            # to /etc on windows
+            push @dirs, "$ENV{HOMEDRIVE}$ENV{HOMEPATH}";
+        } else {
+            push @dirs, $ENV{HOME};
+            push @dirs, "/etc";
+        }
+        [grep {defined} @dirs];
     },
 );
 
@@ -789,7 +799,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.66 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-18.
+This document describes version 0.67 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-18.
 
 =for Pod::Coverage ^(.+)$
 
