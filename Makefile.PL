@@ -12,11 +12,9 @@ use ExtUtils::MakeMaker;
 my %WriteMakefileArgs = (
   "ABSTRACT" => "A lightweight Rinci/Riap-based command-line application framework",
   "AUTHOR" => "perlancar <perlancar\@cpan.org>",
-  "BUILD_REQUIRES" => {
-    "Perl::osnames" => "0.09"
-  },
   "CONFIGURE_REQUIRES" => {
-    "ExtUtils::MakeMaker" => 0
+    "ExtUtils::MakeMaker" => 0,
+    "Perl::osnames" => "0.09"
   },
   "DISTNAME" => "Perinci-CmdLine-Lite",
   "EXE_FILES" => [],
@@ -57,7 +55,7 @@ my %WriteMakefileArgs = (
     "Perinci::Examples" => "0.41",
     "Test::More" => "0.98"
   },
-  "VERSION" => "0.67",
+  "VERSION" => "0.68",
   "test" => {
     "TESTS" => "t/*.t"
   }
