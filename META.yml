@@ -49,7 +49,7 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Perinci-CmdLine-Lite
   homepage: https://metacpan.org/release/Perinci-CmdLine-Lite
   repository: git://github.com/perlancar/perl-Perinci-CmdLine-Lite.git
-version: '0.68'
+version: '0.69'
 x_Dist_Zilla:
   perl:
     version: '5.018002'
