@@ -1,30 +1,24 @@
-NAME
-    Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line
-    application framework
-
-VERSION
-    This document describes version 0.69 of Perinci::CmdLine::Lite (from
-    Perl distribution Perinci-CmdLine-Lite), released on 2014-12-19.
-
 SYNOPSIS
+
     See Perinci::CmdLine::Manual::Examples.
 
 DESCRIPTION
-    Perinci::CmdLine::Lite (hereby P::C::Lite) is a lightweight (low startup
-    overhead, minimal dependencies) alternative to Perinci::CmdLine (hereby
-    P::C). It offers a subset of functionality and a compatible API. Unless
-    you use the unsupported features of P::C, P::C::Lite is a drop-in
-    replacement for P::C (also see Perinci::CmdLine::Any for automatic
-    fallback).
+
+    Perinci::CmdLine::Lite (hereby P::C::Lite) is a lightweight (low
+    startup overhead, minimal dependencies) alternative to Perinci::CmdLine
+    (hereby P::C). It offers a subset of functionality and a compatible
+    API. Unless you use the unsupported features of P::C, P::C::Lite is a
+    drop-in replacement for P::C (also see Perinci::CmdLine::Any for
+    automatic fallback).
 
     P::C::Lite stays lightweight by avoiding the use of libraries that have
     large dependencies or add too much to startup overhead. This includes
-    Perinci::Access for metadata access, Data::Sah for validator generation,
-    Text::ANSITable for formatting results, and Log::Any::App (which uses
-    Log::Log4perl) for logging.
+    Perinci::Access for metadata access, Data::Sah for validator
+    generation, Text::ANSITable for formatting results, and Log::Any::App
+    (which uses Log::Log4perl) for logging.
 
     P::C::Lite attributes default to condition of low startup overhead. For
-    example, "log" is by default off instead of on like in P::C.
+    example, log is by default off instead of on like in P::C.
 
     I first developed P::C::Lite mainly for CLI applications that utilize
     shell tab completion as their main feature, e.g. App::PMUtils,
@@ -32,96 +26,99 @@ DESCRIPTION
 
     Below is summary of the differences between P::C::Lite and P::C:
 
-    *   P::C::Lite starts much faster
+      * P::C::Lite starts much faster
 
-        The target is under 0.04-0.05s to make shell tab completion
-        convenient. On the other hand, P::C can start between 0.20-0.50s.
+      The target is under 0.04-0.05s to make shell tab completion
+      convenient. On the other hand, P::C can start between 0.20-0.50s.
 
-    *   P::C::Lite uses simpler formatting
+      * P::C::Lite uses simpler formatting
 
-        Instead of Perinci::Result::Format (especially for 'text*' formats
-        which use Data::Format::Pretty::Console and Text::ANSITable), to
-        keep dependencies minimal and formatting quick, P::C::Lite uses the
-        following simple rules that work for a significant portion of common
-        data structures:
+      Instead of Perinci::Result::Format (especially for 'text*' formats
+      which use Data::Format::Pretty::Console and Text::ANSITable), to keep
+      dependencies minimal and formatting quick, P::C::Lite uses the
+      following simple rules that work for a significant portion of common
+      data structures:
 
-        1) if result is undef, print nothing.
+      1) if result is undef, print nothing.
 
-        2) if result is scalar, print it (with newline automatically added).
+      2) if result is scalar, print it (with newline automatically added).
 
-        3) if result is an array of scalars (check at most 5 first rows),
-        print it one line for each element.
+      3) if result is an array of scalars (check at most 5 first rows),
+      print it one line for each element.
 
-        4) if result is a hash of scalars (check at most 5 keys), print a
-        two column table, first column is key and second column is value.
-        Keys will be sorted.
+      4) if result is a hash of scalars (check at most 5 keys), print a two
+      column table, first column is key and second column is value. Keys
+      will be sorted.
 
-        5) if result is an array of hashes of scalars (check at most 5
-        elements), print as table.
+      5) if result is an array of hashes of scalars (check at most 5
+      elements), print as table.
 
-        6) if result is an array of arrays of scalars (check at most 5
-        elements), print as table.
+      6) if result is an array of arrays of scalars (check at most 5
+      elements), print as table.
 
-        7) otherwise print as JSON (after cleaning it with
-        Data::Clean::JSON).
+      7) otherwise print as JSON (after cleaning it with
+      Data::Clean::JSON).
 
-        YAML and the other formats are not supported.
+      YAML and the other formats are not supported.
 
-        Table is printed using the more lightweight and much faster
-        Text::Table::Tiny.
+      Table is printed using the more lightweight and much faster
+      Text::Table::Tiny.
 
-    *   No support for some protocols
+      * No support for some protocols
 
-        Instead of Perinci::Access, this module uses the more lightweight
-        alternative Perinci::Access::Lite which does not support some URL
-        schemes (http/https and local are supported though).
+      Instead of Perinci::Access, this module uses the more lightweight
+      alternative Perinci::Access::Lite which does not support some URL
+      schemes (http/https and local are supported though).
 
-    *   No automatic validation from schema in P::C::Lite
+      * No automatic validation from schema in P::C::Lite
 
-        Since code wrapping and schema code generation done by
-        Perinci::Sub::Wrapper and Data::Sah (which are called automatically
-        by Perinci::Access, but not by Perinci::Access::Lite) adds too much
-        startup overhead.
+      Since code wrapping and schema code generation done by
+      Perinci::Sub::Wrapper and Data::Sah (which are called automatically
+      by Perinci::Access, but not by Perinci::Access::Lite) adds too much
+      startup overhead.
 
-    *   P::C::Lite does not support color themes
+      * P::C::Lite does not support color themes
 
-    *   P::C::Lite does not support undo
+      * P::C::Lite does not support undo
 
-    *   P::C::Lite currently has simpler logging
+      * P::C::Lite currently has simpler logging
 
-        Only logging to screen is supported, using
-        Log::Any::Adapter::ScreenColoredLevel.
+      Only logging to screen is supported, using
+      Log::Any::Adapter::ScreenColoredLevel.
 
-    *   P::C::Lite does not support progress indicator
+      * P::C::Lite does not support progress indicator
 
-    *   P::C::Lite does not support I18N
+      * P::C::Lite does not support I18N
 
-    *   P::C::Lite does not yet support these environment variables
+      * P::C::Lite does not yet support these environment variables
 
-         PERINCI_CMDLINE_COLOR_THEME
-         PERINCI_CMDLINE_SERVER
-         PROGRESS
-         COLOR
-         UTF8
+       PERINCI_CMDLINE_COLOR_THEME
+       PERINCI_CMDLINE_SERVER
+       PROGRESS
+       COLOR
+       UTF8
 
-    *   In passing command-line object to functions, P::C::Lite object is
-        passed
+      * In passing command-line object to functions, P::C::Lite object is
+      passed
 
-        Some functions might expect a Perinci::CmdLine instance.
+      Some functions might expect a Perinci::CmdLine instance.
 
 REQUEST KEYS
+
     All those supported by Perinci::CmdLine::Base, plus:
 
-    *   naked_res => bool
+      * naked_res => bool
 
-        Set to true if user specifies "--naked-res".
+      Set to true if user specifies --naked-res.
 
 ATTRIBUTES
+
     All the attributes of Perinci::CmdLine::Base, plus:
 
-  log => bool (default: 0, or from env)
+ log => bool (default: 0, or from env)
+
     Whether to enable logging. This currently means setting up
-    Log::Any::Adapter to display logging (set in "hook_after_parse_argv", so
+    Log::Any::Adapter to display logging (set in hook_after_parse_argv, so
     tab completion skips this step). To produce log, you use Log::Any in
     your code.
 
@@ -129,65 +126,52 @@ ATTRIBUTES
     TRACE/DEBUG/VERBOSE/QUIET, then the default will be on. It defaults to
     off if you set LOG=0 or LOG_LEVEL=off.
 
-  log_level => str (default: warning, or from env)
+ log_level => str (default: warning, or from env)
+
     Set default log level. The default can also be set via
     LOG_LEVEL/TRACE/DEBUG/VERBOSE/QUIET.
 
 METHODS
+
     All the methods of Perinci::CmdLine::Base, plus:
 
 ENVIRONMENT
+
     All the environment variables that Perinci::CmdLine::Base supports,
     plus:
 
-  DEBUG
+ DEBUG
+
     Set log level to 'debug'.
 
-  VERBOSE
+ VERBOSE
+
     Set log level to 'info'.
 
-  QUIET
+ QUIET
+
     Set log level to 'error'.
 
-  TRACE
+ TRACE
+
     Set log level to 'trace'.
 
-  LOG_LEVEL
+ LOG_LEVEL
+
     Set log level.
 
 RESULT METADATA
+
     All those supported by Perinci::CmdLine::Base, plus:
 
-  x.hint.result_binary => bool
-    If set to true, then when formatting to "text" formats, this class won't
+ x.hint.result_binary => bool
+
+    If set to true, then when formatting to text formats, this class won't
     print any newline to keep the data being printed unmodified.
 
 SEE ALSO
+
     Perinci::CmdLine, Perinci::CmdLine::Manual
 
     Perinci::CmdLine::Any
-
-HOMEPAGE
-    Please visit the project's homepage at
-    <https://metacpan.org/release/Perinci-CmdLine-Lite>.
-
-SOURCE
-    Source repository is at
-    <https://github.com/perlancar/perl-Perinci-CmdLine-Lite>.
-
-BUGS
-    Please report any bugs or feature requests on the bugtracker website
-    <https://rt.cpan.org/Public/Dist/Display.html?Name=Perinci-CmdLine-Lite>
-
-    When submitting a bug or request, please include a test-file or a patch
-    to an existing test-file that illustrates the bug or desired feature.
-
-AUTHOR
-    perlancar <perlancar@cpan.org>
-
-COPYRIGHT AND LICENSE
-    This software is copyright (c) 2014 by perlancar@cpan.org.
-
-    This is free software; you can redistribute it and/or modify it under
-    the same terms as the Perl 5 programming language system itself.
 
