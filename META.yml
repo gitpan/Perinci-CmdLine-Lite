@@ -27,7 +27,6 @@ requires:
   Config::IOD::Reader: '0'
   Data::Check::Structure: '0'
   Data::Clean::JSON: '0'
-  Data::Dmp: '0'
   File::HomeDir: '0'
   File::Which: '0'
   JSON: '0'
@@ -36,10 +35,10 @@ requires:
   Log::Any::Adapter::ScreenColoredLevel: '0'
   Mo: '0'
   Perinci::Access::Lite: '0'
+  Perinci::CmdLine::Help: '0'
   Perinci::Object: '0'
   Perinci::Sub::Complete: '0.69'
   Perinci::Sub::GetArgs::Argv: '0.55'
-  Perinci::Sub::To::CLIDocData: '0'
   Rinci: v1.1.69
   Term::ReadKey: '0'
   Text::Table::Tiny: '0'
@@ -49,7 +48,7 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Perinci-CmdLine-Lite
   homepage: https://metacpan.org/release/Perinci-CmdLine-Lite
   repository: git://github.com/sharyanto/perl-Perinci-CmdLine-Lite.git
-version: '0.70'
+version: '0.71'
 x_Dist_Zilla:
   perl:
     version: '5.018001'
@@ -213,7 +212,7 @@ x_Dist_Zilla:
             -
               class: Pod::Weaver::Plugin::Rinci
               name: '@Author::PERLANCAR/Rinci'
-              version: '0.24'
+              version: '0.25'
             -
               class: Pod::Weaver::Section::Leftovers
               name: '@Author::PERLANCAR/Leftovers'
