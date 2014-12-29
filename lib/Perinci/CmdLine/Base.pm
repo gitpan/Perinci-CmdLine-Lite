@@ -1,9 +1,11 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-12-23'; # DATE
-our $VERSION = '0.71'; # VERSION
+our $DATE = '2014-12-29'; # DATE
+our $VERSION = '0.72'; # VERSION
 
 use 5.010001;
+use strict;
+use warnings;
 use Log::Any '$log';
 
 # this class can actually be a role instead of base class for pericmd &
@@ -436,14 +438,15 @@ sub do_completion {
         },
     );
 
-    my $formatter;
+    my $formatted;
     if ($r->{shell} eq 'bash') {
-        $formatter = \&Complete::Bash::format_completion;
+        $formatted = Complete::Bash::format_completion(
+            $compres, {word=>$words->[$cword]});
     } elsif ($r->{shell} eq 'tcsh') {
-        $formatter = \&Complete::Tcsh::format_completion;
+        $formatted = Complete::Tcsh::format_completion($compres);
     }
 
-    [200, "OK", $formatter->($compres),
+    [200, "OK", $formatted,
      # these extra result are for debugging
      {
          "func.words" => $words,
@@ -1021,7 +1024,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.71 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2014-12-23.
+This document describes version 0.72 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2015-12-29.
 
 =for Pod::Coverage ^(.+)$
 

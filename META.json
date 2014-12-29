@@ -10,7 +10,7 @@
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
-      "version" : "2"
+      "version" : 2
    },
    "name" : "Perinci-CmdLine-Lite",
    "prereqs" : {
@@ -30,7 +30,7 @@
       },
       "runtime" : {
          "requires" : {
-            "Complete::Bash" : "0.12",
+            "Complete::Bash" : "0.14",
             "Complete::Tcsh" : "0",
             "Complete::Util" : "0.13",
             "Config::IOD::Reader" : "0",
@@ -79,10 +79,10 @@
          "web" : "https://github.com/sharyanto/perl-Perinci-CmdLine-Lite"
       }
    },
-   "version" : "0.71",
+   "version" : "0.72",
    "x_Dist_Zilla" : {
       "perl" : {
-         "version" : "5.018001"
+         "version" : "5.018002"
       },
       "plugins" : [
          {
@@ -283,7 +283,7 @@
                      {
                         "class" : "Pod::Weaver::Plugin::Rinci",
                         "name" : "@Author::PERLANCAR/Rinci",
-                        "version" : "0.25"
+                        "version" : "0.26"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Leftovers",
@@ -303,7 +303,7 @@
                      {
                         "class" : "Pod::Weaver::Section::Completion::PerinciCmdLine",
                         "name" : "@Author::PERLANCAR/Completion::PerinciCmdLine",
-                        "version" : "0.08"
+                        "version" : "0.09"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Homepage::DefaultCPAN",

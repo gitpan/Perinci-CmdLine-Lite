@@ -22,7 +22,7 @@ my %WriteMakefileArgs = (
   "MIN_PERL_VERSION" => "5.010001",
   "NAME" => "Perinci::CmdLine::Lite",
   "PREREQ_PM" => {
-    "Complete::Bash" => "0.12",
+    "Complete::Bash" => "0.14",
     "Complete::Tcsh" => 0,
     "Complete::Util" => "0.13",
     "Config::IOD::Reader" => 0,
@@ -54,7 +54,7 @@ my %WriteMakefileArgs = (
     "Perinci::Examples" => "0.41",
     "Test::More" => "0.98"
   },
-  "VERSION" => "0.71",
+  "VERSION" => "0.72",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -63,7 +63,7 @@ my %WriteMakefileArgs = (
 
 my %FallbackPrereqs = (
   "Capture::Tiny" => 0,
-  "Complete::Bash" => "0.12",
+  "Complete::Bash" => "0.14",
   "Complete::Tcsh" => 0,
   "Complete::Util" => "0.13",
   "Config::IOD::Reader" => 0,
