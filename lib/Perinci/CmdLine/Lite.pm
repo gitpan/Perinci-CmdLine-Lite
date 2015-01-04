@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Lite;
 
-our $DATE = '2014-12-29'; # DATE
-our $VERSION = '0.72'; # VERSION
+our $DATE = '2015-01-04'; # DATE
+our $VERSION = '0.73'; # VERSION
 
 use 5.010001;
 # use strict; # already enabled by Mo
@@ -376,7 +376,7 @@ Perinci::CmdLine::Lite - A lightweight Rinci/Riap-based command-line application
 
 =head1 VERSION
 
-This document describes version 0.72 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2015-12-29.
+This document describes version 0.73 of Perinci::CmdLine::Lite (from Perl distribution Perinci-CmdLine-Lite), released on 2015-01-04.
 
 =head1 SYNOPSIS
 
@@ -579,7 +579,7 @@ perlancar <perlancar@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by perlancar@cpan.org.
+This software is copyright (c) 2015 by perlancar@cpan.org.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

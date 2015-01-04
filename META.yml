@@ -22,8 +22,10 @@ meta-spec:
 name: Perinci-CmdLine-Lite
 requires:
   Complete::Bash: '0.14'
+  Complete::Fish: '0.03'
   Complete::Tcsh: '0'
   Complete::Util: '0.13'
+  Complete::Zsh: '0'
   Config::IOD::Reader: '0'
   Data::Check::Structure: '0'
   Data::Clean::JSON: '0'
@@ -48,7 +50,7 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Perinci-CmdLine-Lite
   homepage: https://metacpan.org/release/Perinci-CmdLine-Lite
   repository: git://github.com/sharyanto/perl-Perinci-CmdLine-Lite.git
-version: '0.72'
+version: '0.73'
 x_Dist_Zilla:
   perl:
     version: '5.018002'
@@ -270,7 +272,7 @@ x_Dist_Zilla:
     -
       class: Dist::Zilla::Plugin::Rinci::Validate
       name: '@Author::PERLANCAR/Rinci::Validate'
-      version: '0.19'
+      version: '0.20'
     -
       class: Dist::Zilla::Plugin::SetScriptShebang
       name: '@Author::PERLANCAR/SetScriptShebang'
@@ -300,6 +302,10 @@ x_Dist_Zilla:
       class: Dist::Zilla::Plugin::Test::Rinci
       name: '@Author::PERLANCAR/Test::Rinci'
       version: '0.01'
+    -
+      class: Dist::Zilla::Plugin::PERLANCAR::GenTodoMd
+      name: '@Author::PERLANCAR/PERLANCAR::GenTodoMd'
+      version: '0.03'
     -
       class: Dist::Zilla::Plugin::Prereqs
       config:

@@ -1,7 +1,7 @@
 package Perinci::CmdLine::Base;
 
-our $DATE = '2014-12-29'; # DATE
-our $VERSION = '0.72'; # VERSION
+our $DATE = '2015-01-04'; # DATE
+our $VERSION = '0.73'; # VERSION
 
 use 5.010001;
 use strict;
@@ -379,9 +379,15 @@ sub do_completion {
     if ($r->{shell} eq 'bash') {
         require Complete::Bash;
         ($words, $cword) = @{ Complete::Bash::parse_cmdline(undef,undef,'=') };
+    } elsif ($r->{shell} eq 'fish') {
+        require Complete::Fish;
+        ($words, $cword) = @{ Complete::Fish::parse_cmdline(undef) }; # XXX also break on '='
     } elsif ($r->{shell} eq 'tcsh') {
         require Complete::Tcsh;
         ($words, $cword) = @{ Complete::Tcsh::parse_cmdline(undef) }; # XXX also break on '='
+    } elsif ($r->{shell} eq 'zsh') {
+        require Complete::Zsh;
+        ($words, $cword) = @{ Complete::Zsh::parse_cmdline(undef) }; # XXX also break on '='
     } else {
         die "Unsupported shell '$r->{shell}'";
     }
@@ -442,8 +448,12 @@ sub do_completion {
     if ($r->{shell} eq 'bash') {
         $formatted = Complete::Bash::format_completion(
             $compres, {word=>$words->[$cword]});
+    } elsif ($r->{shell} eq 'fish') {
+        $formatted = Complete::Fish::format_completion($compres);
     } elsif ($r->{shell} eq 'tcsh') {
         $formatted = Complete::Tcsh::format_completion($compres);
+    } elsif ($r->{shell} eq 'zsh') {
+        $formatted = Complete::Zsh::format_completion($compres);
     }
 
     [200, "OK", $formatted,
@@ -1024,7 +1034,7 @@ Perinci::CmdLine::Base - Base class for Perinci::CmdLine{,::Lite}
 
 =head1 VERSION
 
-This document describes version 0.72 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2015-12-29.
+This document describes version 0.73 of Perinci::CmdLine::Base (from Perl distribution Perinci-CmdLine-Lite), released on 2015-01-04.
 
 =for Pod::Coverage ^(.+)$
 
@@ -1625,7 +1635,7 @@ perlancar <perlancar@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by perlancar@cpan.org.
+This software is copyright (c) 2015 by perlancar@cpan.org.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
